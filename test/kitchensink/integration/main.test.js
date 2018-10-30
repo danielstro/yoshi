@@ -16,18 +16,18 @@ describe('Integration', () => {
     webpack();
   });
 
-  describe('build', () => {
-    let result;
+  // describe('build', () => {
+  //   let result;
 
-    beforeAll(async () => {
-      await testSetup.scripts.build();
-      result = await testSetup.scripts.serve();
-    }, 10 * 1000);
+  //   beforeAll(async () => {
+  //     await testSetup.scripts.build();
+  //     result = await testSetup.scripts.serve();
+  //   }, 10 * 1000);
 
-    afterAll(async () => {
-      await result.done();
-    });
+  //   afterAll(async () => {
+  //     await result.done();
+  //   });
 
-    webpack();
-  });
+  //   webpack();
+  // });
 });

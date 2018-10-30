@@ -1,120 +1,154 @@
 const { matchCSS, initTest } = require('../../utils');
 
 module.exports = () => {
-  describe('Webpack', () => {
-    it('css inclusion', async () => {
-      await initTest('css-inclusion');
+  describe('webpack', () => {
+    describe('css', () => {
+      it('css inclusion', async () => {
+        await initTest('css-inclusion');
 
-      const className = await page.$eval('#feature-css-inclusion', elm =>
-        elm.getAttribute('class'),
-      );
+        const className = await page.$eval('#feature-css-inclusion', elm =>
+          elm.getAttribute('class'),
+        );
 
-      await matchCSS(page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
-      ]);
+        await matchCSS(page, [
+          new RegExp(`.${className}{background:.+;color:.+}`),
+        ]);
+      });
+
+      it('global css inclusion', async () => {
+        await initTest('global-css-inclusion');
+
+        await matchCSS(page, [
+          /\.globalCssModulesInclusion\{background:.+;color:.+}/,
+        ]);
+      });
     });
 
-    it('global css inclusion', async () => {
-      await initTest('global-css-inclusion');
+    describe('scss', () => {
+      it('scss inclusion', async () => {
+        await initTest('scss-inclusion');
 
-      await matchCSS(page, [
-        /\.globalCssModulesInclusion\{background:.+;color:.+}/,
-      ]);
+        const className = await page.$eval('#feature-scss-inclusion', elm =>
+          elm.getAttribute('class'),
+        );
+
+        await matchCSS(page, [
+          new RegExp(`.${className}{background:.+;color:.+}`),
+        ]);
+      });
+
+      it('global scss inclusion', async () => {
+        await initTest('global-scss-inclusion');
+
+        await matchCSS(page, [
+          /\.globalScssModulesInclusion\{background:.+;color:.+}/,
+        ]);
+      });
     });
 
-    it('scss inclusion', async () => {
-      await initTest('scss-inclusion');
+    describe('sass', () => {
+      it('sass inclusion', async () => {
+        await initTest('sass-inclusion');
 
-      const className = await page.$eval('#feature-scss-inclusion', elm =>
-        elm.getAttribute('class'),
-      );
+        const className = await page.$eval('#feature-sass-inclusion', elm =>
+          elm.getAttribute('class'),
+        );
 
-      await matchCSS(page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
-      ]);
+        await matchCSS(page, [
+          new RegExp(`.${className}{background:.+;color:.+}`),
+        ]);
+      });
+
+      it('global sass inclusion', async () => {
+        await initTest('global-sass-inclusion');
+
+        await matchCSS(page, [
+          /\.globalSassModulesInclusion\{background:.+;color:.+}/,
+        ]);
+      });
     });
 
-    it('global scss inclusion', async () => {
-      await initTest('global-scss-inclusion');
+    describe('less', () => {
+      it('less inclusion', async () => {
+        await initTest('less-inclusion');
 
-      await matchCSS(page, [
-        /\.globalScssModulesInclusion\{background:.+;color:.+}/,
-      ]);
+        const className = await page.$eval('#feature-less-inclusion', elm =>
+          elm.getAttribute('class'),
+        );
+
+        await matchCSS(page, [
+          new RegExp(`.${className}{background:.+;color:.+}`),
+        ]);
+      });
+
+      it('global less inclusion', async () => {
+        await initTest('global-less-inclusion');
+
+        await matchCSS(page, [
+          /\.globalLessModulesInclusion\{background:.+;color:.+}/,
+        ]);
+      });
     });
 
-    it('sass inclusion', async () => {
-      await initTest('sass-inclusion');
+    describe('markdown', () => {
+      it('markdown inclusion', async () => {
+        await initTest('markdown-inclusion');
 
-      const className = await page.$eval('#feature-sass-inclusion', elm =>
-        elm.getAttribute('class'),
-      );
+        const innerHTML = await page.$eval(
+          '#feature-markdown-inclusion',
+          elm => elm.innerHTML,
+        );
 
-      await matchCSS(page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
-      ]);
+        expect(innerHTML).toEqual('## Hello World');
+      });
     });
 
-    it('global sass inclusion', async () => {
-      await initTest('global-sass-inclusion');
+    describe('assets', () => {
+      it('small image inclusion', async () => {
+        await initTest('small-image-inclusion');
 
-      await matchCSS(page, [
-        /\.globalSassModulesInclusion\{background:.+;color:.+}/,
-      ]);
-    });
+        const imageSource = await page.$eval(
+          '#feature-small-image-inclusion',
+          elm => elm.src,
+        );
 
-    it('less inclusion', async () => {
-      await initTest('less-inclusion');
+        expect(imageSource).toMatch(/^data:image\/jpeg;base64.+==$/);
+      });
 
-      const className = await page.$eval('#feature-less-inclusion', elm =>
-        elm.getAttribute('class'),
-      );
+      it('large image inclusion', async () => {
+        await initTest('large-image-inclusion');
 
-      await matchCSS(page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
-      ]);
-    });
+        const imageSource = await page.$eval(
+          '#feature-large-image-inclusion',
+          elm => elm.src,
+        );
 
-    it('global less inclusion', async () => {
-      await initTest('global-less-inclusion');
+        expect(imageSource).toMatch(
+          /^.+components\/features\/assets\/large-bart-simpson.gif.+$/,
+        );
+      });
 
-      await matchCSS(page, [
-        /\.globalLessModulesInclusion\{background:.+;color:.+}/,
-      ]);
-    });
+      it('inline svg inclusion', async () => {
+        await initTest('inline-svg-inclusion');
 
-    it('small image inclusion', async () => {
-      await initTest('small-image-inclusion');
+        const imageSource = await page.$eval(
+          '#feature-inline-svg-inclusion',
+          elm => elm.src,
+        );
 
-      const imageSource = await page.$eval(
-        '#feature-small-image-inclusion',
-        elm => elm.src,
-      );
+        expect(imageSource).toMatch(/svg/);
+      });
 
-      expect(imageSource).toMatch(/^data:image\/jpeg;base64.+==$/);
-    });
+      it('json inclusion', async () => {
+        await initTest('json-inclusion');
 
-    it('large image inclusion', async () => {
-      await initTest('large-image-inclusion');
+        const result = await page.$eval(
+          '#feature-json-inclusion',
+          elm => elm.textContent,
+        );
 
-      const imageSource = await page.$eval(
-        '#feature-large-image-inclusion',
-        elm => elm.src,
-      );
-
-      expect(imageSource).toMatch(
-        /^.+components\/features\/assets\/large-bart-simpson.gif.+$/,
-      );
-    });
-
-    it('json inclusion', async () => {
-      await initTest('json-inclusion');
-
-      const result = await page.$eval(
-        '#feature-json-inclusion',
-        elm => elm.textContent,
-      );
-
-      expect(result).toBe('This is an abstract.');
+        expect(result).toBe('This is an abstract.');
+      });
     });
   });
 };

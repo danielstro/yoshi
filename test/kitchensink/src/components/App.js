@@ -22,6 +22,8 @@ class App extends Component {
       'global-less-inclusion',
       'small-image-inclusion',
       'large-image-inclusion',
+      'inline-svg-inclusion',
+      'markdown-inclusion',
       'json-inclusion',
     ];
 
