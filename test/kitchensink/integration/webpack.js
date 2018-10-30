@@ -34,6 +34,13 @@ module.exports = () => {
           new RegExp(`.${className}{background:.+;color:.+}`),
         ]);
       });
+
+      it('auto prefixer', async () => {
+        await initTest('css-auto-prefixer');
+        await matchCSS(page, [
+          /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
+        ]);
+      });
     });
 
     describe('scss', () => {
