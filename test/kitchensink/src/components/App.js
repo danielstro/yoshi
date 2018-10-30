@@ -24,6 +24,8 @@ class App extends Component {
       'large-image-inclusion',
       'inline-svg-inclusion',
       'markdown-inclusion',
+      'html-inclusion',
+      'graphql-inclusion',
       'json-inclusion',
     ];
 

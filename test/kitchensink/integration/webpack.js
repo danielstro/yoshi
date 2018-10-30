@@ -103,7 +103,20 @@ module.exports = () => {
       });
     });
 
-    describe('assets', () => {
+    describe('graphql', () => {
+      it('graphql inclusion', async () => {
+        await initTest('graphql-inclusion');
+
+        const innerHTML = await page.$eval(
+          '#graphql-inclusion',
+          elm => elm.innerHTML,
+        );
+
+        expect(JSON.parse(innerHTML)).toMatchObject({ kind: 'Document' });
+      });
+    });
+
+    describe('images', () => {
       it('small image inclusion', async () => {
         await initTest('small-image-inclusion');
 
@@ -138,7 +151,9 @@ module.exports = () => {
 
         expect(imageSource).toMatch(/svg/);
       });
+    });
 
+    describe('other assets', () => {
       it('json inclusion', async () => {
         await initTest('json-inclusion');
 
