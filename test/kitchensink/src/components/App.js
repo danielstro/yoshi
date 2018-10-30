@@ -11,37 +11,10 @@ class App extends Component {
   }
 
   async componentDidMount() {
-    const features = [
-      'css-inclusion',
-      'global-css-inclusion',
-      'scss-inclusion',
-      'global-scss-inclusion',
-      'sass-inclusion',
-      'global-sass-inclusion',
-      'less-inclusion',
-      'global-less-inclusion',
-      'small-image-inclusion',
-      'large-image-inclusion',
-      'inline-svg-inclusion',
-      'markdown-inclusion',
-      'html-inclusion',
-      'graphql-inclusion',
-      'json-inclusion',
-    ];
+    const featureName = toCamelCase(window.location.hash.slice(1));
+    const { default: feature } = await import(`./features/${featureName}`);
 
-    const requested = window.location.hash.slice(1);
-
-    const feature = features.find(name => name === requested);
-
-    if (!feature) {
-      throw new Error(`Missing feature "${requested}"`);
-    }
-
-    const camelCased = toCamelCase(feature);
-
-    const { default: component } = await import(`./features/${camelCased}`);
-
-    this.setState({ feature: component });
+    this.setState({ feature });
   }
 
   render() {

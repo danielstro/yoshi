@@ -1,7 +1,7 @@
 const testSetup = require('../../test-setup');
 const webpack = require('./webpack');
 
-describe('Integration', () => {
+describe('integration', () => {
   describe('start', () => {
     let result;
 
@@ -16,18 +16,18 @@ describe('Integration', () => {
     webpack();
   });
 
-  // describe('build', () => {
-  //   let result;
+  describe('build', () => {
+    let result;
 
-  //   beforeAll(async () => {
-  //     await testSetup.scripts.build();
-  //     result = await testSetup.scripts.serve();
-  //   }, 10 * 1000);
+    beforeAll(async () => {
+      await testSetup.scripts.build();
+      result = await testSetup.scripts.serve();
+    }, 10 * 1000);
 
-  //   afterAll(async () => {
-  //     await result.done();
-  //   });
+    afterAll(async () => {
+      await result.done();
+    });
 
-  //   webpack();
-  // });
+    webpack();
+  });
 });
