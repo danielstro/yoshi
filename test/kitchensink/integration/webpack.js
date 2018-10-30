@@ -6,7 +6,7 @@ module.exports = () => {
       it('css inclusion', async () => {
         await initTest('css-inclusion');
 
-        const className = await page.$eval('#feature-css-inclusion', elm =>
+        const className = await page.$eval('#css-inclusion', elm =>
           elm.getAttribute('class'),
         );
 
@@ -28,7 +28,7 @@ module.exports = () => {
       it('scss inclusion', async () => {
         await initTest('scss-inclusion');
 
-        const className = await page.$eval('#feature-scss-inclusion', elm =>
+        const className = await page.$eval('#scss-inclusion', elm =>
           elm.getAttribute('class'),
         );
 
@@ -50,7 +50,7 @@ module.exports = () => {
       it('sass inclusion', async () => {
         await initTest('sass-inclusion');
 
-        const className = await page.$eval('#feature-sass-inclusion', elm =>
+        const className = await page.$eval('#sass-inclusion', elm =>
           elm.getAttribute('class'),
         );
 
@@ -72,7 +72,7 @@ module.exports = () => {
       it('less inclusion', async () => {
         await initTest('less-inclusion');
 
-        const className = await page.$eval('#feature-less-inclusion', elm =>
+        const className = await page.$eval('#less-inclusion', elm =>
           elm.getAttribute('class'),
         );
 
@@ -95,7 +95,7 @@ module.exports = () => {
         await initTest('markdown-inclusion');
 
         const innerHTML = await page.$eval(
-          '#feature-markdown-inclusion',
+          '#markdown-inclusion',
           elm => elm.innerHTML,
         );
 
@@ -108,7 +108,7 @@ module.exports = () => {
         await initTest('small-image-inclusion');
 
         const imageSource = await page.$eval(
-          '#feature-small-image-inclusion',
+          '#small-image-inclusion',
           elm => elm.src,
         );
 
@@ -119,7 +119,7 @@ module.exports = () => {
         await initTest('large-image-inclusion');
 
         const imageSource = await page.$eval(
-          '#feature-large-image-inclusion',
+          '#large-image-inclusion',
           elm => elm.src,
         );
 
@@ -132,7 +132,7 @@ module.exports = () => {
         await initTest('inline-svg-inclusion');
 
         const imageSource = await page.$eval(
-          '#feature-inline-svg-inclusion',
+          '#inline-svg-inclusion',
           elm => elm.src,
         );
 
@@ -143,7 +143,7 @@ module.exports = () => {
         await initTest('json-inclusion');
 
         const result = await page.$eval(
-          '#feature-json-inclusion',
+          '#json-inclusion',
           elm => elm.textContent,
         );
 
