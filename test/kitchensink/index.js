@@ -1,12 +1,10 @@
-const bootstrap = require('wix-bootstrap-ng');
+const path = require('path');
+const express = require('express');
 
-const app = bootstrap()
-  .use(require('wix-bootstrap-greynode'))
-  .use(require('wix-bootstrap-hadron'))
-  .use(require('wix-bootstrap-renderer'));
+const app = express();
 
-app.express('./dist/server');
-
-app.start({
-  disableCluster: process.env.NODE_ENV !== 'production',
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './src/index.html'));
 });
+
+app.listen(process.env.PORT);

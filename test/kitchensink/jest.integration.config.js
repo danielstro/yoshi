@@ -1,4 +1,6 @@
 module.exports = {
   preset: 'jest-puppeteer',
-  testMatch: ['**/integration/*.test.js'],
+  testMatch: ['**/*.test.js'],
+  // transform: { '^.+\\.js$': './jest.transform.js' },
+  transformIgnorePatterns: ['/node_modules/', '/test/'],
 };

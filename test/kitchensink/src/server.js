@@ -1,6 +1,3 @@
-import wixExpressCsrf from 'wix-express-csrf';
-import wixExpressRequireHttps from 'wix-express-require-https';
-
 // This function is the main entry for our server. It accepts an express Router
 // (see http://expressjs.com) and attaches routes and middlewares to it.
 //
@@ -9,14 +6,6 @@ import wixExpressRequireHttps from 'wix-express-require-https';
 export default (app, context) => {
   // We load the already parsed ERB configuration (located at /templates folder).
   const config = context.config.load('kitchensink');
-
-  // Attach CSRF protection middleware. See
-  // https://github.com/wix-platform/wix-node-platform/tree/master/express/wix-express-csrf.
-  app.use(wixExpressCsrf());
-
-  // Require HTTPS by redirecting to HTTPS from HTTP. Only active in a production environment.
-  // See https://github.com/wix-platform/wix-node-platform/tree/master/express/wix-express-require-https.
-  app.use(wixExpressRequireHttps);
 
   // Attach a rendering middleware, it adds the `renderView` method to every request.
   // See https://github.com/wix-private/fed-infra/tree/master/wix-bootstrap-renderer.

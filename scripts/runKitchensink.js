@@ -37,49 +37,49 @@ fs.copySync(projectDir, tempDir);
 // execa.shellSync('npm install', { cwd: tempDir, stdio: 'inherit' });
 
 // test `npx yoshi start`
-const start = execa.shell(`npx yoshi start`, {
-  cwd: tempDir,
-  stdio: 'inherit',
-});
-
-execa.shellSync('npx wait-port 3000 -o silent');
-execa.shellSync('npx wait-port 3200 -o silent');
-
-execa.shellSync(
-  `npx jest --no-cache --runInBand --config='jest.integration.config.js'`,
-  { cwd: tempDir, stdio: 'inherit' },
-);
-
-start.kill();
-
-// test `npx yoshi build`
-execa.shellSync('npm run build --if-present', {
-  cwd: tempDir,
-  stdio: 'inherit',
-});
-
-execa.shellSync('npm run pretest', { cwd: tempDir, stdio: 'inherit' });
-
-const serve = execa.shell(`npx serve --listen=3200`, {
-  cwd: path.join(tempDir, 'dist/statics'),
-  stdio: 'inherit',
-});
-
-const index = execa.shell(`node index.js`, {
-  cwd: tempDir,
-  stdio: 'inherit',
-});
-
-execa.shellSync('npx wait-port 3000 -o silent');
-execa.shellSync('npx wait-port 3200 -o silent');
-
-execa.shellSync(
-  `npx jest --no-cache --runInBand --config='jest.integration.config.js'`,
-  { cwd: tempDir, stdio: 'inherit' },
-);
-
-index.kill();
-serve.kill();
+// const start = execa.shell(`npx yoshi start`, {
+//   cwd: tempDir,
+//   stdio: 'inherit',
 // });
 
-// cleanup();
+// execa.shellSync('npx wait-port 3000 -o silent');
+// execa.shellSync('npx wait-port 3200 -o silent');
+
+execa.shellSync(
+  `npx jest --no-cache --runInBand --config='jest.integration.config.js'`,
+  { cwd: tempDir, stdio: 'inherit' },
+);
+
+// start.kill();
+
+// // test `npx yoshi build`
+// execa.shellSync('npm run build --if-present', {
+//   cwd: tempDir,
+//   stdio: 'inherit',
+// });
+
+// execa.shellSync('npm run pretest', { cwd: tempDir, stdio: 'inherit' });
+
+// const serve = execa.shell(`npx serve --listen=3200`, {
+//   cwd: path.join(tempDir, 'dist/statics'),
+//   stdio: 'inherit',
+// });
+
+// const index = execa.shell(`node index.js`, {
+//   cwd: tempDir,
+//   stdio: 'inherit',
+// });
+
+// execa.shellSync('npx wait-port 3000 -o silent');
+// execa.shellSync('npx wait-port 3200 -o silent');
+
+// execa.shellSync(
+//   `npx jest --no-cache --runInBand --config='jest.integration.config.js'`,
+//   { cwd: tempDir, stdio: 'inherit' },
+// );
+
+// index.kill();
+// serve.kill();
+// // });
+
+// // cleanup();
