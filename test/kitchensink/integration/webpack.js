@@ -19,7 +19,19 @@ module.exports = () => {
         await initTest('global-css-inclusion');
 
         await matchCSS(page, [
-          /\.globalCssModulesInclusion\{background:.+;color:.+}/,
+          /\.global-css-modules-inclusion\{background:.+;color:.+}/,
+        ]);
+      });
+
+      it('css camelcase inclusion', async () => {
+        await initTest('css-camelcase-inclusion');
+
+        const className = await page.$eval('#css-camelcase-inclusion', elm =>
+          elm.getAttribute('class'),
+        );
+
+        await matchCSS(page, [
+          new RegExp(`.${className}{background:.+;color:.+}`),
         ]);
       });
     });
@@ -41,7 +53,7 @@ module.exports = () => {
         await initTest('global-scss-inclusion');
 
         await matchCSS(page, [
-          /\.globalScssModulesInclusion\{background:.+;color:.+}/,
+          /\.global-scss-modules-inclusion\{background:.+;color:.+}/,
         ]);
       });
     });
@@ -63,7 +75,7 @@ module.exports = () => {
         await initTest('global-sass-inclusion');
 
         await matchCSS(page, [
-          /\.globalSassModulesInclusion\{background:.+;color:.+}/,
+          /\.global-sass-modules-inclusion\{background:.+;color:.+}/,
         ]);
       });
     });
@@ -85,7 +97,7 @@ module.exports = () => {
         await initTest('global-less-inclusion');
 
         await matchCSS(page, [
-          /\.globalLessModulesInclusion\{background:.+;color:.+}/,
+          /\.global-less-modules-inclusion\{background:.+;color:.+}/,
         ]);
       });
     });
@@ -153,7 +165,7 @@ module.exports = () => {
       });
     });
 
-    describe('other assets', () => {
+    describe('json', () => {
       it('json inclusion', async () => {
         await initTest('json-inclusion');
 
