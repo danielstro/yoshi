@@ -4,9 +4,7 @@ const tempy = require('tempy');
 const Scripts = require('./scripts');
 
 module.exports = class TestSetup {
-  constructor(fixtureName, templateDirectory) {
-    this.fixtureName = fixtureName;
-
+  constructor(templateDirectory) {
     this.templateDirectory = templateDirectory;
     this.testDirectory = null;
     this._scripts = null;
