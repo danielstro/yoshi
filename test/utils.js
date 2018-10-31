@@ -29,10 +29,14 @@ const matchCSS = async (chunkName, page, regexes) => {
   }
 };
 
-const matchJS = async (name, page, regexes) => {
-  const url = await page.$$eval('script', scripts => {
-    return scripts.map(script => script.src).find(src => src.contains(name));
-  });
+const matchJS = async (chunkName, page, regexes) => {
+  const url = await page.$$eval(
+    'script',
+    (scripts, name) => {
+      return scripts.map(script => script.src).find(src => src.contains(name));
+    },
+    chunkName,
+  );
 
   const content = await request(url);
 
