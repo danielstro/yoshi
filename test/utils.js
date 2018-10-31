@@ -10,18 +10,17 @@ const request = url => {
   });
 };
 
-const matchCSS = async (page, regexes) => {
-  const url = await page.$$eval('link', links => {
-    let href = '';
-
-    for (const link of links) {
-      if (link.rel === 'stylesheet') {
-        href = link.href;
-      }
-    }
-
-    return href;
-  });
+const matchCSS = async (chunkName, page, regexes) => {
+  const url = await page.$$eval(
+    'link',
+    (links, name) => {
+      return links
+        .filter(link => link.rel === 'stylesheet')
+        .map(link => link.href)
+        .find(href => href.includes(name));
+    },
+    chunkName,
+  );
 
   const content = await request(url);
 
@@ -30,15 +29,9 @@ const matchCSS = async (page, regexes) => {
   }
 };
 
-const matchJS = async (page, regexes) => {
+const matchJS = async (name, page, regexes) => {
   const url = await page.$$eval('script', scripts => {
-    let src = '';
-
-    for (const link of scripts) {
-      src = link.src;
-    }
-
-    return src;
+    return scripts.map(script => script.src).find(src => src.contains(name));
   });
 
   const content = await request(url);

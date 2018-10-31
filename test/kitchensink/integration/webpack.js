@@ -10,7 +10,7 @@ module.exports = () => {
           elm.getAttribute('class'),
         );
 
-        await matchCSS(page, [
+        await matchCSS('css-inclusion', page, [
           new RegExp(`.${className}{background:.+;color:.+}`),
         ]);
       });
@@ -18,7 +18,7 @@ module.exports = () => {
       it('global css inclusion', async () => {
         await initTest('global-css-inclusion');
 
-        await matchCSS(page, [
+        await matchCSS('global-css-inclusion', page, [
           /\.global-css-modules-inclusion\{background:.+;color:.+}/,
         ]);
       });
@@ -30,21 +30,23 @@ module.exports = () => {
           elm.getAttribute('class'),
         );
 
-        await matchCSS(page, [
+        await matchCSS('css-camelcase-inclusion', page, [
           new RegExp(`.${className}{background:.+;color:.+}`),
         ]);
       });
 
       it('auto prefixer', async () => {
         await initTest('css-auto-prefixer');
-        await matchCSS(page, [
+
+        await matchCSS('css-auto-prefixer', page, [
           /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
         ]);
       });
 
       it('css url() uses relative paths', async () => {
         await initTest('css-image-url');
-        await matchCSS(page, [
+
+        await matchCSS('css-image-url', page, [
           /background-image:url\(components\/features\/assets\/large-bart-simpson.gif.+\)/,
         ]);
       });
@@ -70,7 +72,7 @@ module.exports = () => {
           elm.getAttribute('class'),
         );
 
-        await matchCSS(page, [
+        await matchCSS('scss-inclusion', page, [
           new RegExp(`.${className}{background:.+;color:.+}`),
         ]);
       });
@@ -78,7 +80,7 @@ module.exports = () => {
       it('global scss inclusion', async () => {
         await initTest('global-scss-inclusion');
 
-        await matchCSS(page, [
+        await matchCSS('global-scss-inclusion', page, [
           /\.global-scss-modules-inclusion\{background:.+;color:.+}/,
         ]);
       });
@@ -92,7 +94,7 @@ module.exports = () => {
           elm.getAttribute('class'),
         );
 
-        await matchCSS(page, [
+        await matchCSS('sass-inclusion', page, [
           new RegExp(`.${className}{background:.+;color:.+}`),
         ]);
       });
@@ -100,7 +102,7 @@ module.exports = () => {
       it('global sass inclusion', async () => {
         await initTest('global-sass-inclusion');
 
-        await matchCSS(page, [
+        await matchCSS('global-sass-inclusion', page, [
           /\.global-sass-modules-inclusion\{background:.+;color:.+}/,
         ]);
       });
@@ -114,7 +116,7 @@ module.exports = () => {
           elm.getAttribute('class'),
         );
 
-        await matchCSS(page, [
+        await matchCSS('less-inclusion', page, [
           new RegExp(`.${className}{background:.+;color:.+}`),
         ]);
       });
@@ -122,7 +124,7 @@ module.exports = () => {
       it('global less inclusion', async () => {
         await initTest('global-less-inclusion');
 
-        await matchCSS(page, [
+        await matchCSS('global-less-inclusion', page, [
           /\.global-less-modules-inclusion\{background:.+;color:.+}/,
         ]);
       });
