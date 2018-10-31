@@ -1,4 +1,4 @@
-const { matchCSS, initTest } = require('../../utils');
+const { matchCSS, matchJS, initTest } = require('../../utils');
 
 module.exports = () => {
   describe('webpack', () => {
@@ -40,6 +40,25 @@ module.exports = () => {
         await matchCSS(page, [
           /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
         ]);
+      });
+
+      it('css url() uses relative paths', async () => {
+        await initTest('css-image-url');
+        await matchCSS(page, [
+          /background-image:url\(components\/features\/assets\/large-bart-simpson.gif.+\)/,
+        ]);
+      });
+    });
+
+    describe.skip('stylable', () => {
+      it('st.css inclusion', async () => {
+        await initTest('st-css-inclusion');
+
+        const className = await page.$eval('#st-css-inclusion', elm =>
+          elm.getAttribute('class'),
+        );
+
+        await matchJS(page, [new RegExp(`${className}`)]);
       });
     });
 

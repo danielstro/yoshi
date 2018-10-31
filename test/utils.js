@@ -23,10 +23,28 @@ const matchCSS = async (page, regexes) => {
     return href;
   });
 
-  const style = await request(url);
+  const content = await request(url);
 
   for (const regex of regexes) {
-    expect(style).toMatch(regex);
+    expect(content).toMatch(regex);
+  }
+};
+
+const matchJS = async (page, regexes) => {
+  const url = await page.$$eval('script', scripts => {
+    let src = '';
+
+    for (const link of scripts) {
+      src = link.src;
+    }
+
+    return src;
+  });
+
+  const content = await request(url);
+
+  for (const regex of regexes) {
+    expect(content).toMatch(regex);
   }
 };
 
@@ -35,4 +53,4 @@ const initTest = async feature => {
   await page.reload();
 };
 
-module.exports = { request, matchCSS, initTest };
+module.exports = { request, matchJS, matchCSS, initTest };

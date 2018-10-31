@@ -1,0 +1,5 @@
+.root {
+  -st-states: loading;
+  background: darkblue;
+  color: lightblue;
+}

@@ -22,6 +22,8 @@ module.exports = class TestSetup {
 
     this.testDirectory = tempy.directory();
 
+    console.log(this.testDirectory);
+
     await fs.copy(this.templateDirectory, this.testDirectory);
 
     const shouldInstallScripts = !this.isLocal;
