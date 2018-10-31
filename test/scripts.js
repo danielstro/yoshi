@@ -59,7 +59,7 @@ function execaSafe(...args) {
     }));
 }
 
-module.exports = class ReactScripts {
+module.exports = class Scripts {
   constructor(root) {
     this.root = root;
   }

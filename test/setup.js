@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const tempy = require('tempy');
-const ReactScripts = require('./scripts');
+const Scripts = require('./scripts');
 
 module.exports = class TestSetup {
   constructor(fixtureName, templateDirectory) {
@@ -11,10 +11,7 @@ module.exports = class TestSetup {
     this.testDirectory = null;
     this._scripts = null;
 
-    this.setup = this.setup.bind(this);
-    this.teardown = this.teardown.bind(this);
-
-    this.isLocal = !(process.env.CI && process.env.CI !== 'false');
+    this.isCI = !!process.env.TEAMCITY_VERSION;
   }
 
   async setup() {
@@ -22,12 +19,11 @@ module.exports = class TestSetup {
 
     this.testDirectory = tempy.directory();
 
-    console.log(this.testDirectory);
-
     await fs.copy(this.templateDirectory, this.testDirectory);
 
-    const shouldInstallScripts = !this.isLocal;
+    const shouldInstallScripts = this.isCI;
 
+    // Symlink modules locally for faster feedback
     if (!shouldInstallScripts) {
       await fs.ensureSymlink(
         path.resolve(
@@ -49,6 +45,9 @@ module.exports = class TestSetup {
         ),
         path.join(this.testDirectory, 'node_modules', '.bin', 'yoshi'),
       );
+    } else {
+      // Publish the entire monorepo and install everything from CI to get
+      // the maximum reliability
     }
   }
 
@@ -58,7 +57,7 @@ module.exports = class TestSetup {
     }
 
     if (this._scripts == null) {
-      this._scripts = new ReactScripts(this.testDirectory);
+      this._scripts = new Scripts(this.testDirectory);
     }
 
     return this._scripts;
