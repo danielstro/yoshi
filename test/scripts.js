@@ -1,8 +1,12 @@
 const os = require('os');
 const execa = require('execa');
 const stripAnsi = require('strip-ansi');
-const waitForLocalhost = require('wait-for-localhost');
+const waitPort = require('wait-port');
 const psTree = require('ps-tree');
+
+function waitForPort(port) {
+  return waitPort({ port, timeout: 5000, output: 'silent' });
+}
 
 function killProcessAndChildren(child) {
   return new Promise(resolve => {
@@ -69,7 +73,7 @@ module.exports = class Scripts {
 
     const startProcess = execa('npx', ['yoshi', 'start'], {
       cwd: this.root,
-      stdio: 'inherit',
+      // stdio: 'inherit',
       env: {
         CI: 'false',
         FORCE_COLOR: '0',
@@ -79,7 +83,7 @@ module.exports = class Scripts {
       },
     });
 
-    await waitForLocalhost(port);
+    await Promise.race([waitForPort(port), startProcess]);
 
     return {
       port,
@@ -117,8 +121,8 @@ module.exports = class Scripts {
       },
     });
 
-    await waitForLocalhost(staticsServerPort);
-    await waitForLocalhost(appServerProcessPort);
+    await waitForPort(staticsServerPort);
+    await waitForPort(appServerProcessPort);
 
     return {
       staticsServerPort,
