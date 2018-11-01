@@ -83,6 +83,18 @@ describe('webpack', () => {
         /\.global-scss-modules-inclusion\{background:.+;color:.+}/,
       ]);
     });
+
+    it('import external scss files', async () => {
+      await initTest('scss-import-external');
+
+      const className = await page.$eval('#scss-import-external', elm =>
+        elm.getAttribute('class'),
+      );
+
+      await matchCSS('scss-import-external', page, [
+        new RegExp(`.${className}{background:.+;color:.+}`),
+      ]);
+    });
   });
 
   describe('sass', () => {
