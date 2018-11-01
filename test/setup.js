@@ -47,6 +47,12 @@ module.exports = class TestSetup {
       // Publish the entire monorepo and install everything from CI to get
       // the maximum reliability
     }
+
+    // Copy mocked `node_modules`
+    await fs.copy(
+      path.join(this.templateDirectory, '__node_modules__'),
+      path.join(this.testDirectory, 'node_modules'),
+    );
   }
 
   get scripts() {

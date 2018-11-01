@@ -53,6 +53,7 @@
   },
   "yoshi": {
     "experimentalServerBundle": true,
+    "externalUnprocessedModules": ["untranspiled-dependency"],
     "externals": {
       "react": "React",
       "react-dom": "ReactDOM"

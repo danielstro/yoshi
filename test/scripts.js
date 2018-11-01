@@ -69,7 +69,7 @@ module.exports = class Scripts {
 
     const startProcess = execa('npx', ['yoshi', 'start'], {
       cwd: this.root,
-      // stdio: 'inherit',
+      stdio: 'inherit',
       env: {
         CI: 'false',
         FORCE_COLOR: '0',
