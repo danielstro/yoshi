@@ -4,8 +4,12 @@ const stripAnsi = require('strip-ansi');
 const waitPort = require('wait-port');
 const psTree = require('ps-tree');
 
-function waitForPort(port) {
-  return waitPort({ port, timeout: 5000, output: 'silent' });
+async function waitForPort(port, { timeout = 10000 } = {}) {
+  const portFound = await waitPort({ port, timeout, output: 'silent' });
+
+  if (!portFound) {
+    throw new Error(`Timed out waiting for "${port}".`);
+  }
 }
 
 function killProcessAndChildren(child) {

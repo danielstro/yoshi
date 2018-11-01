@@ -139,6 +139,18 @@ describe('webpack', () => {
         /\.global-less-modules-inclusion\{background:.+;color:.+}/,
       ]);
     });
+
+    it('import external less files', async () => {
+      await initTest('less-import-external');
+
+      const className = await page.$eval('#less-import-external', elm =>
+        elm.getAttribute('class'),
+      );
+
+      await matchCSS('less-import-external', page, [
+        new RegExp(`.${className}{background:.+;color:.+}`),
+      ]);
+    });
   });
 
   describe('markdown', () => {
