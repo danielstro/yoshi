@@ -38,7 +38,7 @@ describe('webpack', () => {
       await initTest('css-auto-prefixer');
 
       await matchCSS('css-auto-prefixer', page, [
-        /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
+        /-webkit-appearance:.+;-moz-appearance:.+;appearance:.+/,
       ]);
     });
 
@@ -100,7 +100,7 @@ describe('webpack', () => {
       await initTest('scss-auto-prefixer');
 
       await matchCSS('scss-auto-prefixer', page, [
-        /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
+        /-webkit-appearance:.+;-moz-appearance:.+;appearance:.+/,
       ]);
     });
   });
@@ -130,7 +130,7 @@ describe('webpack', () => {
       await initTest('sass-auto-prefixer');
 
       await matchCSS('sass-auto-prefixer', page, [
-        /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
+        /-webkit-appearance:.+;-moz-appearance:.+;appearance:.+/,
       ]);
     });
   });
@@ -172,7 +172,7 @@ describe('webpack', () => {
       await initTest('less-auto-prefixer');
 
       await matchCSS('less-auto-prefixer', page, [
-        /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
+        /-webkit-appearance:.+;-moz-appearance:.+;appearance:.+/,
       ]);
     });
   });

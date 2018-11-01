@@ -1,7 +1,6 @@
 module.exports = {
   preset: 'jest-puppeteer',
-  testMatch: ['**/*.test.js'],
-  // transform: { '^.+\\.js$': './jest.transform.js' },
+  testMatch: ['**/webpack.test.js'],
   transformIgnorePatterns: ['/node_modules/', '/test/'],
   globalSetup: require.resolve('./buildGlobalSetup'),
   globalTeardown: require.resolve('./buildGlobalTeardown'),
