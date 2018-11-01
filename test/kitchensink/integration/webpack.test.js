@@ -34,7 +34,7 @@ describe('webpack', () => {
       ]);
     });
 
-    it('auto prefixer', async () => {
+    it('auto-prefixer', async () => {
       await initTest('css-auto-prefixer');
 
       await matchCSS('css-auto-prefixer', page, [
@@ -95,6 +95,14 @@ describe('webpack', () => {
         new RegExp(`.${className}{background:.+;color:.+}`),
       ]);
     });
+
+    it('auto-prefixer', async () => {
+      await initTest('scss-auto-prefixer');
+
+      await matchCSS('scss-auto-prefixer', page, [
+        /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
+      ]);
+    });
   });
 
   describe('sass', () => {
@@ -115,6 +123,14 @@ describe('webpack', () => {
 
       await matchCSS('global-sass-inclusion', page, [
         /\.global-sass-modules-inclusion\{background:.+;color:.+}/,
+      ]);
+    });
+
+    it('auto-prefixer', async () => {
+      await initTest('sass-auto-prefixer');
+
+      await matchCSS('sass-auto-prefixer', page, [
+        /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
       ]);
     });
   });
@@ -149,6 +165,14 @@ describe('webpack', () => {
 
       await matchCSS('less-import-external', page, [
         new RegExp(`.${className}{background:.+;color:.+}`),
+      ]);
+    });
+
+    it('auto-prefixer', async () => {
+      await initTest('less-auto-prefixer');
+
+      await matchCSS('less-auto-prefixer', page, [
+        /-webkit-appearance:'none';-moz-appearance:'none';appearance:'none';/,
       ]);
     });
   });
