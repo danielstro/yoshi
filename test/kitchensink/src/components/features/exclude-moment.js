@@ -1,12 +1,12 @@
 import React from 'react';
-import { en } from 'moment';
+import moment from 'moment';
 import de from 'moment/locale/de';
+
+// log both to prevent them from being tree shaked
+console.log(moment, de);
 
 export default () => (
   <div>
-    <div id="exclude-moment">
-      <div id="en">{en}</div>
-      <div id="de">{de}</div>
-    </div>
+    <div id="exclude-moment">Moment locales should be imported directly!</div>
   </div>
 );

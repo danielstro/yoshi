@@ -53,7 +53,7 @@ const matchJS = async (chunkName, page, regexes) => {
     chunkName,
   );
 
-  const content = await request(url);
+  const content = (await request(url)).replace(/\s/g, '');
 
   for (const regex of regexes) {
     expect(content).toMatch(regex);

@@ -17,8 +17,6 @@ module.exports = class TestSetup {
 
     this.rootDirectory = tempy.directory();
 
-    console.log(this.rootDirectory);
-
     this.testDirectory = path.join(this.rootDirectory, 'project');
 
     await fs.copy(this.templateDirectory, this.testDirectory);
@@ -62,7 +60,7 @@ module.exports = class TestSetup {
 
   async teardown() {
     if (this.rootDirectory != null) {
-      // await fs.remove(this.rootDirectory);
+      await fs.remove(this.rootDirectory);
 
       this.rootDirectory = null;
       this.testDirectory = null;
