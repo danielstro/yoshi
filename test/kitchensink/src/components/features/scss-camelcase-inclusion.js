@@ -3,8 +3,8 @@ import styles from './assets/style.scss';
 
 export default () => (
   <div>
-    <p id="scss-inclusion" className={styles['scss-modules-inclusion']}>
-      SCSS Modules are working!
+    <p id="scss-camelcase-inclusion" className={styles.scssModulesInclusion}>
+      CSS Modules are working!
     </p>
   </div>
 );

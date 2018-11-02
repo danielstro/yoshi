@@ -3,8 +3,8 @@ import styles from './assets/style.less';
 
 export default () => (
   <div>
-    <p id="less-inclusion" className={styles['less-modules-inclusion']}>
-      LESS Modules are working!
+    <p id="less-camelcase-inclusion" className={styles.lessModulesInclusion}>
+      CSS Modules are working!
     </p>
   </div>
 );

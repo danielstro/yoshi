@@ -84,14 +84,14 @@ describe('webpack', () => {
       ]);
     });
 
-    it('import external scss files', async () => {
-      await initTest('scss-import-external');
+    it('scss camelcase inclusion', async () => {
+      await initTest('scss-camelcase-inclusion');
 
-      const className = await page.$eval('#scss-import-external', elm =>
+      const className = await page.$eval('#scss-camelcase-inclusion', elm =>
         elm.getAttribute('class'),
       );
 
-      await matchCSS('scss-import-external', page, [
+      await matchCSS('scss-camelcase-inclusion', page, [
         new RegExp(`.${className}{background:.+;color:.+}`),
       ]);
     });
@@ -101,6 +101,18 @@ describe('webpack', () => {
 
       await matchCSS('scss-auto-prefixer', page, [
         /-webkit-appearance:.+;-moz-appearance:.+;appearance:.+/,
+      ]);
+    });
+
+    it('import external scss files', async () => {
+      await initTest('scss-import-external');
+
+      const className = await page.$eval('#scss-import-external', elm =>
+        elm.getAttribute('class'),
+      );
+
+      await matchCSS('scss-import-external', page, [
+        new RegExp(`.${className}{background:.+;color:.+}`),
       ]);
     });
   });
@@ -123,6 +135,18 @@ describe('webpack', () => {
 
       await matchCSS('global-sass-inclusion', page, [
         /\.global-sass-modules-inclusion\{background:.+;color:.+}/,
+      ]);
+    });
+
+    it('sass camelcase inclusion', async () => {
+      await initTest('sass-camelcase-inclusion');
+
+      const className = await page.$eval('#sass-camelcase-inclusion', elm =>
+        elm.getAttribute('class'),
+      );
+
+      await matchCSS('sass-camelcase-inclusion', page, [
+        new RegExp(`.${className}{background:.+;color:.+}`),
       ]);
     });
 
@@ -156,14 +180,14 @@ describe('webpack', () => {
       ]);
     });
 
-    it('import external less files', async () => {
-      await initTest('less-import-external');
+    it('less camelcase inclusion', async () => {
+      await initTest('less-camelcase-inclusion');
 
-      const className = await page.$eval('#less-import-external', elm =>
+      const className = await page.$eval('#less-camelcase-inclusion', elm =>
         elm.getAttribute('class'),
       );
 
-      await matchCSS('less-import-external', page, [
+      await matchCSS('less-camelcase-inclusion', page, [
         new RegExp(`.${className}{background:.+;color:.+}`),
       ]);
     });
@@ -173,6 +197,18 @@ describe('webpack', () => {
 
       await matchCSS('less-auto-prefixer', page, [
         /-webkit-appearance:.+;-moz-appearance:.+;appearance:.+/,
+      ]);
+    });
+
+    it('import external less files', async () => {
+      await initTest('less-import-external');
+
+      const className = await page.$eval('#less-import-external', elm =>
+        elm.getAttribute('class'),
+      );
+
+      await matchCSS('less-import-external', page, [
+        new RegExp(`.${className}{background:.+;color:.+}`),
       ]);
     });
   });
