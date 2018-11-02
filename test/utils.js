@@ -1,6 +1,6 @@
 const http = require('http');
 
-const request = url => {
+const makeRequest = url => {
   return new Promise(resolve => {
     http.get(url, res => {
       let rawData = '';
@@ -8,6 +8,21 @@ const request = url => {
       res.on('end', () => resolve(rawData.replace(/\s/g, '')));
     });
   });
+};
+
+const request = url => {
+  if (
+    url.startsWith('https://static.parastorage.com/services/kitchensink/1.0.0')
+  ) {
+    return makeRequest(
+      url.replace(
+        'https://static.parastorage.com/services/kitchensink/1.0.0',
+        'http://localhost:3200',
+      ),
+    );
+  }
+
+  return makeRequest(url);
 };
 
 const matchCSS = async (chunkName, page, regexes) => {
