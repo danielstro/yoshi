@@ -1,4 +1,4 @@
-const { matchCSS, matchJS, initTest } = require('../../utils');
+const { matchCSS, matchJS, initTest, request } = require('../../utils');
 
 describe('webpack', () => {
   describe('css', () => {
@@ -350,6 +350,14 @@ describe('webpack', () => {
       expect(de).toBe('hallo');
 
       await matchJS('exclude-moment', page, [/hallo/]);
+    });
+  });
+
+  describe('public folder', () => {
+    it('copied and accessible', async () => {
+      const response = await request('http://localhost:3200/hello.txt');
+
+      expect(response).toBe('Hello from public folder!');
     });
   });
 });

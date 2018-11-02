@@ -1,6 +1,6 @@
 import React from 'react';
 import { en } from 'moment';
-import { de } from 'moment/locale/de';
+import de from 'moment/locale/de';
 
 export default () => (
   <div>

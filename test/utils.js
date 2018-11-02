@@ -5,7 +5,7 @@ const makeRequest = url => {
     http.get(url, res => {
       let rawData = '';
       res.on('data', chunk => (rawData += chunk));
-      res.on('end', () => resolve(rawData.replace(/\s/g, '')));
+      res.on('end', () => resolve(rawData));
     });
   });
 };
@@ -37,7 +37,7 @@ const matchCSS = async (chunkName, page, regexes) => {
     chunkName,
   );
 
-  const content = await request(url);
+  const content = (await request(url)).replace(/\s/g, '');
 
   for (const regex of regexes) {
     expect(content).toMatch(regex);

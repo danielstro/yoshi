@@ -15,7 +15,11 @@ module.exports = class TestSetup {
   async setup() {
     await this.teardown();
 
-    this.testDirectory = tempy.directory();
+    this.rootDirectory = tempy.directory();
+
+    console.log(this.rootDirectory);
+
+    this.testDirectory = path.join(this.rootDirectory, 'project');
 
     await fs.copy(this.templateDirectory, this.testDirectory);
 
@@ -24,24 +28,13 @@ module.exports = class TestSetup {
     // Symlink modules locally for faster feedback
     if (!shouldInstallScripts) {
       await fs.ensureSymlink(
-        path.resolve(
-          path.resolve(__dirname, '..', 'packages', 'yoshi', 'node_modules'),
-        ),
-        path.join(this.testDirectory, 'node_modules'),
+        path.join(__dirname, '..', 'packages', 'yoshi', 'node_modules'),
+        path.join(this.rootDirectory, 'node_modules'),
       );
 
       await fs.ensureSymlink(
-        path.resolve(
-          path.resolve(
-            __dirname,
-            '../../..',
-            'packages',
-            'yoshi',
-            'bin',
-            'yoshi.js',
-          ),
-        ),
-        path.join(this.testDirectory, 'node_modules', '.bin', 'yoshi'),
+        path.join(__dirname, '..', 'packages', 'yoshi', 'bin', 'yoshi.js'),
+        path.join(this.rootDirectory, 'node_modules', '.bin', 'yoshi'),
       );
     } else {
       // Publish the entire monorepo and install everything from CI to get
@@ -68,9 +61,10 @@ module.exports = class TestSetup {
   }
 
   async teardown() {
-    if (this.testDirectory != null) {
-      await fs.remove(this.testDirectory);
+    if (this.rootDirectory != null) {
+      // await fs.remove(this.rootDirectory);
 
+      this.rootDirectory = null;
       this.testDirectory = null;
       this._scripts = null;
     }
