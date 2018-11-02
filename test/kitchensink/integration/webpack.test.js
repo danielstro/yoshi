@@ -115,6 +115,18 @@ describe('webpack', () => {
         new RegExp(`.${className}{background:.+;color:.+}`),
       ]);
     });
+
+    it('supports imports to compass', async () => {
+      await initTest('scss-import-compass');
+
+      const className = await page.$eval('#scss-import-compass', elm =>
+        elm.getAttribute('class'),
+      );
+
+      await matchCSS('scss-import-compass', page, [
+        new RegExp(`.${className}{background:.+;color:.+}`),
+      ]);
+    });
   });
 
   describe('sass', () => {
