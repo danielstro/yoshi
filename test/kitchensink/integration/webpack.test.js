@@ -324,4 +324,32 @@ describe('webpack', () => {
       expect(result).toBe('External untranspiled dependency.');
     });
   });
+
+  describe('moment', () => {
+    it('exclude locales imported from moment', async () => {
+      await initTest('exclude-moment');
+
+      const en = await page.$eval(
+        '#exclude-moment #en',
+        elm => elm.textContent,
+      );
+
+      expect(en).toBe('');
+
+      await matchJS('exclude-moment', page, [/^((?!hello).)*$/]);
+    });
+
+    it('include locales imported outside of moment', async () => {
+      await initTest('exclude-moment');
+
+      const de = await page.$eval(
+        '#exclude-moment #de',
+        elm => elm.textContent,
+      );
+
+      expect(de).toBe('hallo');
+
+      await matchJS('exclude-moment', page, [/hallo/]);
+    });
+  });
 });

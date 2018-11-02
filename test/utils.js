@@ -48,7 +48,7 @@ const matchJS = async (chunkName, page, regexes) => {
   const url = await page.$$eval(
     'script',
     (scripts, name) => {
-      return scripts.map(script => script.src).find(src => src.contains(name));
+      return scripts.map(script => script.src).find(src => src.includes(name));
     },
     chunkName,
   );
