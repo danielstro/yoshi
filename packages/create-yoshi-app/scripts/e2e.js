@@ -10,6 +10,7 @@ const { testRegistry } = require('../src/constants');
 const {
   killSpawnProcessAndHisChildren,
 } = require('../../../test-helpers/process');
+const waitPort = require('wait-port');
 
 // verbose logs and output
 const verbose = process.env.VERBOSE_TESTS;
@@ -91,9 +92,7 @@ const testTemplate = mockedAnswers => {
           stdio,
         });
 
-        execa.shellSync(`npx wait-port ${serverPort} -o silent`, {
-          stdio,
-        });
+        await waitPort({ port: serverPort, output: 'silent' });
 
         const { statusCode } = await new Promise(resolve =>
           require('http').get(`http://localhost:${serverPort}`, resolve),
@@ -110,9 +109,7 @@ const testTemplate = mockedAnswers => {
           stdio,
         });
 
-        execa.shellSync(`npx wait-port ${cdnPort} -o silent`, {
-          stdio,
-        });
+        await waitPort({ port: cdnPort, output: 'silent' });
 
         const { statusCode } = await new Promise(resolve =>
           require('http').get(
@@ -127,7 +124,7 @@ const testTemplate = mockedAnswers => {
   });
 };
 
-const publishMonorepo = () => {
+const publishMonorepo = async () => {
   // Start in root directory even if run from another directory
   process.chdir(path.join(__dirname, '../../..'));
 
@@ -135,9 +132,7 @@ const publishMonorepo = () => {
     stdio,
   });
 
-  execa.shellSync('npx wait-port 4873 -o silent', {
-    stdio,
-  });
+  await waitPort({ port: 4873, output: 'silent' });
 
   execa.shellSync(
     `npx lerna exec 'npx npm-auth-to-token -u user -p password -e user@example.com -r "${testRegistry}"'`,
@@ -169,8 +164,8 @@ const publishMonorepo = () => {
 describe('create-yoshi-app + yoshi e2e tests', () => {
   let cleanup;
 
-  before(() => {
-    cleanup = publishMonorepo();
+  before(async () => {
+    cleanup = await publishMonorepo();
   });
 
   after(() => cleanup());
