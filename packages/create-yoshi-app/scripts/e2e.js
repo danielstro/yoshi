@@ -2,6 +2,7 @@ const path = require('path');
 const tempy = require('tempy');
 const execa = require('execa');
 const chalk = require('chalk');
+const waitPort = require('wait-port');
 const Answers = require('../src/Answers');
 const { createApp, verifyRegistry, projects } = require('../src/index');
 const prompts = require('prompts');
@@ -10,7 +11,6 @@ const { testRegistry } = require('../src/constants');
 const {
   killSpawnProcessAndHisChildren,
 } = require('../../../test-helpers/process');
-const waitPort = require('wait-port');
 
 // verbose logs and output
 const verbose = process.env.VERBOSE_TESTS;
