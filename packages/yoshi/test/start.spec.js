@@ -383,14 +383,16 @@ describe('Aggregator: Start', () => {
       });
     });
 
-    describe('CDN server', () => {
-      it('should serve files without "min" suffix when requested with a "min" suffix', () => {
-        child = test
-          .setup({
-            'src/client.js': `module.exports = {};`,
-            'package.json': fx.packageJson(),
-          })
-          .spawn('start');
+    describe.only('CDN server', () => {
+      it('should serve files without "min" suffix when requested with a "min" suffix', async () => {
+        const tp = test.setup({
+          'src/client.js': `module.exports = {};`,
+          'package.json': fx.packageJson(),
+        });
+
+        child = tp.spawn('start');
+
+        await tp.waitForOutput('Built at:');
 
         return checkServerIsServing({
           port: 3200,
@@ -402,13 +404,15 @@ describe('Aggregator: Start', () => {
         });
       });
 
-      it('should serve files without "min" suffix when requested with a "min" suffix in ssl', () => {
-        child = test
-          .setup({
-            'src/client.js': `module.exports = {};`,
-            'package.json': fx.packageJson({ servers: { cdn: { ssl: true } } }),
-          })
-          .spawn('start');
+      it('should serve files without "min" suffix when requested with a "min" suffix in ssl', async () => {
+        const tp = test.setup({
+          'src/client.js': `module.exports = {};`,
+          'package.json': fx.packageJson({ servers: { cdn: { ssl: true } } }),
+        });
+
+        child = tp.spawn('start');
+
+        await tp.waitForOutput('Built at:');
 
         const agent = new https.Agent({
           rejectUnauthorized: false,
@@ -426,70 +430,80 @@ describe('Aggregator: Start', () => {
         );
       });
 
-      it('should run cdn server with default dir', () => {
-        child = test
-          .setup({
-            'src/assets/test.json': '{a: 1}',
-            'src/index.js': 'var a = 1;',
-            'package.json': fx.packageJson({
-              servers: { cdn: { port: 5005 } },
-            }),
-          })
-          .spawn('start');
+      it('should run cdn server with default dir', async () => {
+        const tp = test.setup({
+          'src/assets/test.json': '{a: 1}',
+          'src/index.js': 'var a = 1;',
+          'package.json': fx.packageJson({
+            servers: { cdn: { port: 5005 } },
+          }),
+        });
+
+        child = tp.spawn('start');
+
+        await tp.waitForOutput("Finished 'cdn' after");
 
         return cdnIsServing('assets/test.json');
       });
 
-      it('should run cdn server with configured dir', () => {
-        child = test
-          .setup({
-            'src/assets/test.json': '{a: 1}',
-            'src/index.js': 'var a = 1;',
-            'package.json': fx.packageJson({
-              servers: { cdn: { port: 5005, dir: 'dist/statics' } },
-            }),
-          })
-          .spawn('start');
+      it('should run cdn server with configured dir', async () => {
+        const tp = test.setup({
+          'src/assets/test.json': '{a: 1}',
+          'src/index.js': 'var a = 1;',
+          'package.json': fx.packageJson({
+            servers: { cdn: { port: 5005, dir: 'dist/statics' } },
+          }),
+        });
+
+        child = tp.spawn('start');
+
+        await tp.waitForOutput("Finished 'cdn' after");
 
         return cdnIsServing('assets/test.json');
       });
 
-      it('should run cdn server from node_modules, on n-build project, using default dir', () => {
-        child = test
-          .setup({
-            'node_modules/my-client-project/dist/test.json': '{a: 1}',
-            'src/index.js': 'var a = 1;',
-            'package.json': fx.packageJson({
-              clientProjectName: 'my-client-project',
-              servers: { cdn: { port: 5005 } },
-            }),
-          })
-          .spawn('start');
+      it('should run cdn server from node_modules, on n-build project, using default dir', async () => {
+        const tp = test.setup({
+          'node_modules/my-client-project/dist/test.json': '{a: 1}',
+          'src/index.js': 'var a = 1;',
+          'package.json': fx.packageJson({
+            clientProjectName: 'my-client-project',
+            servers: { cdn: { port: 5005 } },
+          }),
+        });
+
+        child = tp.spawn('start');
+
+        await tp.waitForOutput("Finished 'cdn' after");
 
         return cdnIsServing('test.json');
       });
 
-      it('should run cdn server from node_modules, on n-build project, using configured dir', () => {
-        child = test
-          .setup({
-            'node_modules/my-client-project/dist/statics/test.json': '{a: 1}',
-            'src/index.js': 'var a = 1;',
-            'package.json': fx.packageJson({
-              clientProjectName: 'my-client-project',
-              servers: { cdn: { port: 5005, dir: 'dist/statics' } },
-            }),
-          })
-          .spawn('start');
+      it('should run cdn server from node_modules, on n-build project, using configured dir', async () => {
+        const tp = test.setup({
+          'node_modules/my-client-project/dist/statics/test.json': '{a: 1}',
+          'src/index.js': 'var a = 1;',
+          'package.json': fx.packageJson({
+            clientProjectName: 'my-client-project',
+            servers: { cdn: { port: 5005, dir: 'dist/statics' } },
+          }),
+        });
+
+        child = tp.spawn('start');
+
+        await tp.waitForOutput("Finished 'cdn' after");
 
         return cdnIsServing('test.json');
       });
 
-      it('should support cross origin requests headers', () => {
-        child = test
-          .setup({
-            'package.json': fx.packageJson(),
-          })
-          .spawn('start');
+      it('should support cross origin requests headers', async () => {
+        const tp = test.setup({
+          'package.json': fx.packageJson(),
+        });
+
+        child = tp.spawn('start');
+
+        await tp.waitForOutput("Finished 'cdn' after");
 
         return fetchCDN().then(res => {
           expect(res.headers.get('Access-Control-Allow-Methods')).to.equal(
@@ -499,12 +513,14 @@ describe('Aggregator: Start', () => {
         });
       });
 
-      it('should support resource timing headers', () => {
-        child = test
-          .setup({
-            'package.json': fx.packageJson(),
-          })
-          .spawn('start');
+      it('should support resource timing headers', async () => {
+        const tp = test.setup({
+          'package.json': fx.packageJson(),
+        });
+
+        child = tp.spawn('start');
+
+        await tp.waitForOutput("Finished 'cdn' after");
 
         return fetchCDN().then(res => {
           expect(res.headers.get('Timing-Allow-Origin')).to.equal('*');
@@ -535,32 +551,36 @@ describe('Aggregator: Start', () => {
           rejectUnauthorized: false,
         });
 
-        it('should be able to create an https server', () => {
-          child = test
-            .setup({
-              'src/assets/test.json': '{a: 1}',
-              'src/index.js': 'var a = 1;',
-              'package.json': fx.packageJson({
-                servers: {
-                  cdn: { port: 5005, dir: 'dist/statics', ssl: true },
-                },
-              }),
-            })
-            .spawn('start');
+        it('should be able to create an https server', async () => {
+          const tp = test.setup({
+            'src/assets/test.json': '{a: 1}',
+            'src/index.js': 'var a = 1;',
+            'package.json': fx.packageJson({
+              servers: {
+                cdn: { port: 5005, dir: 'dist/statics', ssl: true },
+              },
+            }),
+          });
+
+          child = tp.spawn('start', '--ssl');
+
+          await tp.waitForOutput("Finished 'cdn' after");
 
           return cdnIsServing('assets/test.json', 5005, 'https', { agent });
         });
 
-        it('should enable ssl when ran --ssl', () => {
-          child = test
-            .setup({
-              'src/assets/test.json': '{a: 1}',
-              'src/index.js': 'var a = 1;',
-              'package.json': fx.packageJson({
-                servers: { cdn: { port: 5005, dir: 'dist/statics' } },
-              }),
-            })
-            .spawn('start', '--ssl');
+        it('should enable ssl when ran --ssl', async () => {
+          const tp = test.setup({
+            'src/assets/test.json': '{a: 1}',
+            'src/index.js': 'var a = 1;',
+            'package.json': fx.packageJson({
+              servers: { cdn: { port: 5005, dir: 'dist/statics' } },
+            }),
+          });
+
+          child = tp.spawn('start', '--ssl');
+
+          await tp.waitForOutput("Finished 'cdn' after");
 
           return cdnIsServing('assets/test.json', 5005, 'https', { agent });
         });
@@ -663,7 +683,7 @@ describe('Aggregator: Start', () => {
       });
 
       describe('client side code', () => {
-        it('should recreate and serve a bundle after file changes', () => {
+        it('should recreate and serve a bundle after file changes', async () => {
           const file = { port: 3200, file: 'app.bundle.js' };
           const newSource = `module.exports = 'wat';\n`;
 
