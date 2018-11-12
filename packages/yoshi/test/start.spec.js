@@ -5,12 +5,16 @@ const {
 const tp = require('../../../test-helpers/test-phases');
 const fx = require('../../../test-helpers/fixtures');
 const fetch = require('node-fetch');
+const waitPort = require('wait-port');
 const retryPromise = require('retry-promise').default;
-const { outsideTeamCity } = require('../../../test-helpers/env-variables');
+const {
+  outsideTeamCity,
+  insideTeamCity,
+} = require('../../../test-helpers/env-variables');
 const https = require('https');
 const { takePort } = require('../../../test-helpers/http-helpers');
 
-describe('Aggregator: Start', () => {
+describe.only('Aggregator: Start', () => {
   let test, child;
 
   describe('Yoshi', () => {
@@ -209,7 +213,7 @@ describe('Aggregator: Start', () => {
             },
             [],
           )
-          .spawn('start');
+          .spawn('start', [], insideTeamCity);
 
         return checkServerIsServing({ port: 3200, file: 'app.bundle.js' }).then(
           content => expect(content).to.contain(`"reload":false`),
@@ -224,7 +228,7 @@ describe('Aggregator: Start', () => {
             'src/client.js': `module.exports.wat = 'hmr';\n`,
             'package.json': fx.packageJson(),
           })
-          .spawn('start');
+          .spawn('start', [], insideTeamCity);
 
         return checkServerIsServing({ port: 3200, file: 'app.bundle.js' }).then(
           content => expect(content).to.contain('"hmr":true'),
@@ -243,7 +247,7 @@ describe('Aggregator: Start', () => {
               },
             }),
           })
-          .spawn('start');
+          .spawn('start', [], insideTeamCity);
 
         const appBundleContent = await checkServerIsServing({
           port: 3200,
@@ -266,7 +270,7 @@ describe('Aggregator: Start', () => {
             },
             [],
           )
-          .spawn('start');
+          .spawn('start', [], insideTeamCity);
 
         return checkServerIsServing({ port: 3200, file: 'app.bundle.js' }).then(
           content => expect(content).to.contain(`"hmr":false`),
@@ -339,7 +343,7 @@ describe('Aggregator: Start', () => {
             },
             [],
           )
-          .spawn('start');
+          .spawn('start', [], insideTeamCity);
 
         return checkServerIsServing({ port: 3200, file: 'app.bundle.js' }).then(
           content => {
@@ -356,7 +360,7 @@ describe('Aggregator: Start', () => {
             'src/client.js': `module.exports.wat = 'hmr';\n`,
             'package.json': fx.packageJson(),
           })
-          .spawn('start');
+          .spawn('start', [], insideTeamCity);
 
         return checkServerIsServing({ port: 3200, file: 'app.bundle.js' }).then(
           content =>
@@ -383,16 +387,14 @@ describe('Aggregator: Start', () => {
       });
     });
 
-    describe.only('CDN server', () => {
-      it('should serve files without "min" suffix when requested with a "min" suffix', async () => {
-        const tp = test.setup({
-          'src/client.js': `module.exports = {};`,
-          'package.json': fx.packageJson(),
-        });
-
-        child = tp.spawn('start');
-
-        await tp.waitForOutput('Built at:');
+    describe('CDN server', () => {
+      it('should serve files without "min" suffix when requested with a "min" suffix', () => {
+        child = test
+          .setup({
+            'src/client.js': `module.exports = {};`,
+            'package.json': fx.packageJson(),
+          })
+          .spawn('start');
 
         return checkServerIsServing({
           port: 3200,
@@ -404,15 +406,13 @@ describe('Aggregator: Start', () => {
         });
       });
 
-      it('should serve files without "min" suffix when requested with a "min" suffix in ssl', async () => {
-        const tp = test.setup({
-          'src/client.js': `module.exports = {};`,
-          'package.json': fx.packageJson({ servers: { cdn: { ssl: true } } }),
-        });
-
-        child = tp.spawn('start');
-
-        await tp.waitForOutput('Built at:');
+      it('should serve files without "min" suffix when requested with a "min" suffix in ssl', () => {
+        child = test
+          .setup({
+            'src/client.js': `module.exports = {};`,
+            'package.json': fx.packageJson({ servers: { cdn: { ssl: true } } }),
+          })
+          .spawn('start');
 
         const agent = new https.Agent({
           rejectUnauthorized: false,
@@ -430,80 +430,70 @@ describe('Aggregator: Start', () => {
         );
       });
 
-      it('should run cdn server with default dir', async () => {
-        const tp = test.setup({
-          'src/assets/test.json': '{a: 1}',
-          'src/index.js': 'var a = 1;',
-          'package.json': fx.packageJson({
-            servers: { cdn: { port: 5005 } },
-          }),
-        });
-
-        child = tp.spawn('start');
-
-        await tp.waitForOutput("Finished 'cdn' after");
+      it('should run cdn server with default dir', () => {
+        child = test
+          .setup({
+            'src/assets/test.json': '{a: 1}',
+            'src/index.js': 'var a = 1;',
+            'package.json': fx.packageJson({
+              servers: { cdn: { port: 5005 } },
+            }),
+          })
+          .spawn('start');
 
         return cdnIsServing('assets/test.json');
       });
 
-      it('should run cdn server with configured dir', async () => {
-        const tp = test.setup({
-          'src/assets/test.json': '{a: 1}',
-          'src/index.js': 'var a = 1;',
-          'package.json': fx.packageJson({
-            servers: { cdn: { port: 5005, dir: 'dist/statics' } },
-          }),
-        });
-
-        child = tp.spawn('start');
-
-        await tp.waitForOutput("Finished 'cdn' after");
+      it('should run cdn server with configured dir', () => {
+        child = test
+          .setup({
+            'src/assets/test.json': '{a: 1}',
+            'src/index.js': 'var a = 1;',
+            'package.json': fx.packageJson({
+              servers: { cdn: { port: 5005, dir: 'dist/statics' } },
+            }),
+          })
+          .spawn('start');
 
         return cdnIsServing('assets/test.json');
       });
 
-      it('should run cdn server from node_modules, on n-build project, using default dir', async () => {
-        const tp = test.setup({
-          'node_modules/my-client-project/dist/test.json': '{a: 1}',
-          'src/index.js': 'var a = 1;',
-          'package.json': fx.packageJson({
-            clientProjectName: 'my-client-project',
-            servers: { cdn: { port: 5005 } },
-          }),
-        });
-
-        child = tp.spawn('start');
-
-        await tp.waitForOutput("Finished 'cdn' after");
+      it('should run cdn server from node_modules, on n-build project, using default dir', () => {
+        child = test
+          .setup({
+            'node_modules/my-client-project/dist/test.json': '{a: 1}',
+            'src/index.js': 'var a = 1;',
+            'package.json': fx.packageJson({
+              clientProjectName: 'my-client-project',
+              servers: { cdn: { port: 5005 } },
+            }),
+          })
+          .spawn('start');
 
         return cdnIsServing('test.json');
       });
 
-      it('should run cdn server from node_modules, on n-build project, using configured dir', async () => {
-        const tp = test.setup({
-          'node_modules/my-client-project/dist/statics/test.json': '{a: 1}',
-          'src/index.js': 'var a = 1;',
-          'package.json': fx.packageJson({
-            clientProjectName: 'my-client-project',
-            servers: { cdn: { port: 5005, dir: 'dist/statics' } },
-          }),
-        });
-
-        child = tp.spawn('start');
-
-        await tp.waitForOutput("Finished 'cdn' after");
+      it('should run cdn server from node_modules, on n-build project, using configured dir', () => {
+        child = test
+          .setup({
+            'node_modules/my-client-project/dist/statics/test.json': '{a: 1}',
+            'src/index.js': 'var a = 1;',
+            'package.json': fx.packageJson({
+              clientProjectName: 'my-client-project',
+              servers: { cdn: { port: 5005, dir: 'dist/statics' } },
+            }),
+          })
+          .spawn('start');
 
         return cdnIsServing('test.json');
       });
 
-      it('should support cross origin requests headers', async () => {
-        const tp = test.setup({
-          'package.json': fx.packageJson(),
-        });
-
-        child = tp.spawn('start');
-
-        await tp.waitForOutput("Finished 'cdn' after");
+      it('should support cross origin requests headers', () => {
+        child = test
+          .setup({
+            'package.json': fx.packageJson(),
+          })
+          .spawn('start');
 
         return fetchCDN().then(res => {
           expect(res.headers.get('Access-Control-Allow-Methods')).to.equal(
@@ -513,14 +503,12 @@ describe('Aggregator: Start', () => {
         });
       });
 
-      it('should support resource timing headers', async () => {
-        const tp = test.setup({
-          'package.json': fx.packageJson(),
-        });
-
-        child = tp.spawn('start');
-
-        await tp.waitForOutput("Finished 'cdn' after");
+      it('should support resource timing headers', () => {
+        child = test
+          .setup({
+            'package.json': fx.packageJson(),
+          })
+          .spawn('start');
 
         return fetchCDN().then(res => {
           expect(res.headers.get('Timing-Allow-Origin')).to.equal('*');
@@ -551,36 +539,32 @@ describe('Aggregator: Start', () => {
           rejectUnauthorized: false,
         });
 
-        it('should be able to create an https server', async () => {
-          const tp = test.setup({
-            'src/assets/test.json': '{a: 1}',
-            'src/index.js': 'var a = 1;',
-            'package.json': fx.packageJson({
-              servers: {
-                cdn: { port: 5005, dir: 'dist/statics', ssl: true },
-              },
-            }),
-          });
-
-          child = tp.spawn('start', '--ssl');
-
-          await tp.waitForOutput("Finished 'cdn' after");
+        it('should be able to create an https server', () => {
+          child = test
+            .setup({
+              'src/assets/test.json': '{a: 1}',
+              'src/index.js': 'var a = 1;',
+              'package.json': fx.packageJson({
+                servers: {
+                  cdn: { port: 5005, dir: 'dist/statics', ssl: true },
+                },
+              }),
+            })
+            .spawn('start', '--ssl');
 
           return cdnIsServing('assets/test.json', 5005, 'https', { agent });
         });
 
-        it('should enable ssl when ran --ssl', async () => {
-          const tp = test.setup({
-            'src/assets/test.json': '{a: 1}',
-            'src/index.js': 'var a = 1;',
-            'package.json': fx.packageJson({
-              servers: { cdn: { port: 5005, dir: 'dist/statics' } },
-            }),
-          });
-
-          child = tp.spawn('start', '--ssl');
-
-          await tp.waitForOutput("Finished 'cdn' after");
+        it('should enable ssl when ran --ssl', () => {
+          child = test
+            .setup({
+              'src/assets/test.json': '{a: 1}',
+              'src/index.js': 'var a = 1;',
+              'package.json': fx.packageJson({
+                servers: { cdn: { port: 5005, dir: 'dist/statics' } },
+              }),
+            })
+            .spawn('start', '--ssl');
 
           return cdnIsServing('assets/test.json', 5005, 'https', { agent });
         });
@@ -609,8 +593,7 @@ describe('Aggregator: Start', () => {
       this.timeout(30000);
 
       describe('when using typescript', () => {
-        // currently is not passing in the CI, needs debugging
-        it.skip(`should rebuild and restart server after a file has been changed with typescript files`, () => {
+        it(`should rebuild and restart server after a file has been changed with typescript files`, () => {
           child = test
             .setup({
               'tsconfig.json': fx.tsconfig(),
@@ -640,8 +623,7 @@ describe('Aggregator: Start', () => {
       });
 
       describe('when using es6', () => {
-        // currently is not passing in the CI, needs debugging
-        it.skip(`should rebuild and restart server after a file has been changed`, () => {
+        it(`should rebuild and restart server after a file has been changed`, () => {
           child = test
             .setup({
               'src/server.js': fx.httpServer('hello'),
@@ -662,8 +644,7 @@ describe('Aggregator: Start', () => {
       });
 
       describe('when using no transpile', () => {
-        // currently is not passing in the CI, needs debugging
-        it.skip(`should restart server after a file has been changed`, () => {
+        it(`should restart server after a file has been changed`, () => {
           child = test
             .setup({
               'src/server.js': fx.httpServer('hello'),
@@ -683,7 +664,7 @@ describe('Aggregator: Start', () => {
       });
 
       describe('client side code', () => {
-        it('should recreate and serve a bundle after file changes', async () => {
+        it('should recreate and serve a bundle after file changes', () => {
           const file = { port: 3200, file: 'app.bundle.js' };
           const newSource = `module.exports = 'wat';\n`;
 
@@ -692,7 +673,7 @@ describe('Aggregator: Start', () => {
               'src/client.js': `module.exports = function () {};\n`,
               'package.json': fx.packageJson(),
             })
-            .spawn('start');
+            .spawn('start', [], insideTeamCity);
 
           return checkServerIsServing(file)
             .then(() => test.modify('src/client.js', newSource))
@@ -789,8 +770,16 @@ describe('Aggregator: Start', () => {
     });
   });
 
-  function checkServerLogCreated({ backoff = 100 } = {}) {
-    return retryPromise({ backoff }, () => {
+  async function checkServerLogCreated({ backoff = 100, max = 10 } = {}) {
+    try {
+      await test.waitForOutput("Finished 'app-server' after");
+    } catch (ex) {
+      // If worker were printed without starting an app-server, that's fine,
+      // we can continue checking the server.log
+      console.log('checkServerLogCreated', ex);
+    }
+
+    return retryPromise({ backoff, max }, () => {
       const created = test.contains('target/server.log');
 
       return created
@@ -807,8 +796,8 @@ describe('Aggregator: Start', () => {
     test.write('target/server.log', '');
   }
 
-  function checkServerLogContains(str, { backoff = 100 } = {}) {
-    return checkServerLogCreated({ backoff }).then(() =>
+  function checkServerLogContains(str, { backoff = 300, max = 30 } = {}) {
+    return checkServerLogCreated({ backoff, max }).then(() =>
       retryPromise({ backoff }, () => {
         const content = serverLogContent();
 
@@ -835,11 +824,7 @@ describe('Aggregator: Start', () => {
   }
 
   function checkStdout(str) {
-    return retryPromise(
-      { backoff: 100 },
-      () =>
-        test.stdout.indexOf(str) > -1 ? Promise.resolve() : Promise.reject(),
-    );
+    return test.waitForOutput(str);
   }
 
   function fetchCDN(port, { path = '/', backoff = 100, max = 10 } = {}) {
@@ -847,33 +832,50 @@ describe('Aggregator: Start', () => {
       path = `/${path}`;
     }
     port = port || 3200;
-    return retryPromise({ backoff, max }, () =>
-      fetch(`http://localhost:${port}${path}`),
+
+    return waitPort({
+      port,
+      output: 'silent',
+      timeout: 20000,
+    }).then(() =>
+      retryPromise({ backoff, max }, () => fetch(`http://localhost:${port}${path}`)),
     );
   }
 
   function cdnIsServing(name, port = 5005, protocol = 'http', options = {}) {
-    return retryPromise({ backoff: 500 }, async () => {
-      const res = await fetch(
-        `${protocol}://localhost:${port}/${name}`,
-        options,
-      );
+    return waitPort({
+      port,
+      output: 'silent',
+      timeout: 20000,
+    }).then(() =>
+      retryPromise({ backoff: 500 }, async () => {
+        const res = await fetch(
+          `${protocol}://localhost:${port}/${name}`,
+          options,
+        );
 
-      const text = await res.text();
+        const text = await res.text();
 
-      expect(res.status).to.equal(200, text);
+        expect(res.status).to.equal(200, text);
 
-      return text;
-    });
+        return text;
+      }),
+    );
   }
 
   function checkServerIsRespondingWith(expected) {
-    return retryPromise({ backoff: 1000 }, () =>
-      fetch(`http://localhost:${fx.defaultServerPort()}/`)
-        .then(res => res.text())
-        .then(
-          body => (body === expected ? Promise.resolve() : Promise.reject()),
-        ),
+    return waitPort({
+      port: fx.defaultServerPort(),
+      output: 'silent',
+      timeout: 20000,
+    }).then(() =>
+      retryPromise({ backoff: 1000 }, () =>
+        fetch(`http://localhost:${fx.defaultServerPort()}/`)
+          .then(res => res.text())
+          .then(
+            body => (body === expected ? Promise.resolve() : Promise.reject()),
+          ),
+      ),
     );
   }
 
@@ -889,9 +891,15 @@ describe('Aggregator: Start', () => {
     protocol = 'http',
     options = {},
   } = {}) {
-    return retryPromise({ backoff, max }, () =>
-      fetch(`${protocol}://localhost:${port}/${file}`, options).then(res =>
-        res.text(),
+    return waitPort({
+      port,
+      output: 'silent',
+      timeout: 20000,
+    }).then(() =>
+      retryPromise({ backoff, max }, () =>
+        fetch(`${protocol}://localhost:${port}/${file}`, options).then(res =>
+          res.text(),
+        ),
       ),
     );
   }
@@ -904,22 +912,28 @@ describe('Aggregator: Start', () => {
   } = {}) {
     const url = `http://localhost:${port}/${file}`;
     let response;
-    return retryPromise(
-      { backoff, max },
-      () =>
-        new Promise((resolve, reject) =>
-          fetch(url)
-            .then(res => res.text())
-            .then(content => {
-              if (response && response !== content) {
-                resolve(content);
-              } else {
-                reject(`response of ${url} did not change`);
-              }
-              response = content;
-            })
-            .catch(reject),
-        ),
+    return waitPort({
+      port,
+      output: 'silent',
+      timeout: 20000,
+    }).then(() =>
+      retryPromise(
+        { backoff, max },
+        () =>
+          new Promise((resolve, reject) =>
+            fetch(url)
+              .then(res => res.text())
+              .then(content => {
+                if (response && response !== content) {
+                  resolve(content);
+                } else {
+                  reject(`response of ${url} did not change`);
+                }
+                response = content;
+              })
+              .catch(reject),
+          ),
+      ),
     );
   }
 });
