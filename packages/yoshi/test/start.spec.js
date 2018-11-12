@@ -589,11 +589,11 @@ describe('Aggregator: Start', () => {
       });
     });
 
-    describe.only('Watch', function() {
+    describe('Watch', function() {
       this.timeout(40000);
 
       describe('when using typescript', () => {
-        it(`should rebuild and restart server after a file has been changed with typescript files`, () => {
+        it.only(`should rebuild and restart server after a file has been changed with typescript files`, () => {
           child = test
             .verbose()
             .setup({
@@ -607,7 +607,7 @@ describe('Aggregator: Start', () => {
               'package.json': fx.packageJson(),
               'pom.xml': fx.pom(),
             })
-            .spawn('start');
+            .spawn('start', ['--verbose']);
 
           return checkServerIsServing({ max: 100 })
             .then(() => checkServerIsRespondingWith('hello'))
