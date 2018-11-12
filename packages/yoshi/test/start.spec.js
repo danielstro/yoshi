@@ -14,7 +14,7 @@ const {
 const https = require('https');
 const { takePort } = require('../../../test-helpers/http-helpers');
 
-describe.only('Aggregator: Start', () => {
+describe('Aggregator: Start', () => {
   let test, child;
 
   describe('Yoshi', () => {
@@ -589,8 +589,8 @@ describe.only('Aggregator: Start', () => {
       });
     });
 
-    describe('Watch', function() {
-      this.timeout(30000);
+    describe.only('Watch', function() {
+      this.timeout(40000);
 
       describe('when using typescript', () => {
         it(`should rebuild and restart server after a file has been changed with typescript files`, () => {
