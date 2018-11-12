@@ -595,6 +595,7 @@ describe('Aggregator: Start', () => {
       describe('when using typescript', () => {
         it(`should rebuild and restart server after a file has been changed with typescript files`, () => {
           child = test
+            .verbose()
             .setup({
               'tsconfig.json': fx.tsconfig(),
               'src/server.ts': `declare var require: any; ${fx.httpServer(
@@ -625,6 +626,7 @@ describe('Aggregator: Start', () => {
       describe('when using es6', () => {
         it(`should rebuild and restart server after a file has been changed`, () => {
           child = test
+            .verbose()
             .setup({
               'src/server.js': fx.httpServer('hello'),
               'src/config.js': '',
@@ -646,6 +648,7 @@ describe('Aggregator: Start', () => {
       describe('when using no transpile', () => {
         it(`should restart server after a file has been changed`, () => {
           child = test
+            .verbose()
             .setup({
               'src/server.js': fx.httpServer('hello'),
               'src/config.js': '',
