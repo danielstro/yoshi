@@ -155,7 +155,7 @@ describe.only('Aggregator: Start', () => {
       });
 
       it('should pass --inspect flag when parameter is passed with the correct port', () => {
-        const port = 8230;
+        const testingPort = 8230;
         const checkIfInspectIsPassedInArgs = function(port) {
           return !!process.execArgv.find(
             arg => arg.indexOf(`--inspect=127.0.0.1:${port}`) === 0,
@@ -165,11 +165,11 @@ describe.only('Aggregator: Start', () => {
         child = test
           .setup({
             'src/client.js': '',
-            'index.js': `console.log((${checkIfInspectIsPassedInArgs.toString()})(${port}))`,
+            'index.js': `console.log((${checkIfInspectIsPassedInArgs.toString()})(${testingPort}))`,
             'package.json': fx.packageJson(),
             'pom.xml': fx.pom(),
           })
-          .spawn('start', `--debug=${port}`);
+          .spawn('start', `--debug=${testingPort}`);
 
         return checkServerLogContains('true', { backoff: 100 });
       });
@@ -796,7 +796,7 @@ describe.only('Aggregator: Start', () => {
     test.write('target/server.log', '');
   }
 
-  function checkServerLogContains(str, { backoff = 300, max = 30 } = {}) {
+  function checkServerLogContains(str, { backoff = 100, max = 10 } = {}) {
     return checkServerLogCreated({ backoff, max }).then(() =>
       retryPromise({ backoff }, () => {
         const content = serverLogContent();
@@ -838,7 +838,9 @@ describe.only('Aggregator: Start', () => {
       output: 'silent',
       timeout: 20000,
     }).then(() =>
-      retryPromise({ backoff, max }, () => fetch(`http://localhost:${port}${path}`)),
+      retryPromise({ backoff, max }, () =>
+        fetch(`http://localhost:${port}${path}`),
+      ),
     );
   }
 
