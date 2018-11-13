@@ -51,18 +51,6 @@ describe('webpack', () => {
     });
   });
 
-  describe.skip('stylable', () => {
-    it('st.css inclusion', async () => {
-      await initTest('st-css-inclusion');
-
-      const className = await page.$eval('#st-css-inclusion', elm =>
-        elm.getAttribute('class'),
-      );
-
-      await matchJS(page, [new RegExp(`${className}`)]);
-    });
-  });
-
   describe('scss', () => {
     it('scss inclusion', async () => {
       await initTest('scss-inclusion');
