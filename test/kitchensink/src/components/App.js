@@ -8,7 +8,7 @@ export default class App extends Component {
   }
 
   async componentDidMount() {
-    const featureName = window.location.hash.slice(1);
+    const featureName = window.location.pathname.slice(1);
 
     const {
       default: feature,

@@ -61,8 +61,7 @@ const matchJS = async (chunkName, page, regexes) => {
 };
 
 const initTest = async feature => {
-  await page.goto(`http://localhost:3000#${feature}`);
-  await page.reload();
+  await page.goto(`http://localhost:3000/${feature}`);
 };
 
 module.exports = { request, matchJS, matchCSS, initTest };
