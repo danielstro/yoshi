@@ -4,6 +4,8 @@ module.exports = class BuildEnvironment extends PuppeteerEnvironment {
   async setup() {
     await super.setup();
 
+    this.global.testSetup = global.testSetup;
+
     await this.global.page.setRequestInterception(true);
 
     this.global.page.on('request', request => {

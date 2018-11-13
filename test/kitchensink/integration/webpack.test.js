@@ -330,10 +330,21 @@ describe('webpack', () => {
   });
 
   describe('public folder', () => {
-    it('copied and accessible', async () => {
+    it('serves static assets', async () => {
       const response = await request('http://localhost:3200/hello.txt');
-
       expect(response).toBe('Hello from public folder!');
+    });
+
+    it('shows the contents of static assets', async () => {
+      await page.goto('http://localhost:3200');
+
+      const list = await page.$$eval('#files li a', lis => {
+        return lis.map(li => li.textContent);
+      });
+
+      expect(list).toEqual(
+        expect.arrayContaining(['components/', 'app.bundle.js', 'hello.txt']),
+      );
     });
   });
 
