@@ -68,15 +68,15 @@ function execaSafe(...args) {
 }
 
 module.exports = class Scripts {
-  constructor(root) {
-    this.root = root;
+  constructor(testDirectory) {
+    this.testDirectory = testDirectory;
   }
 
   async start({ env = {} } = {}) {
     const port = 3000;
 
     const startProcess = execa('npx', ['yoshi', 'start'], {
-      cwd: this.root,
+      cwd: this.testDirectory,
       // stdio: 'inherit',
       env: {
         CI: 'false',
@@ -99,7 +99,7 @@ module.exports = class Scripts {
 
   async build({ env = {} } = {}) {
     return execaSafe('npx', ['yoshi', 'build'], {
-      cwd: this.root,
+      cwd: this.testDirectory,
       env: { CI: 'false', FORCE_COLOR: '0', ...env },
     });
   }
@@ -112,13 +112,13 @@ module.exports = class Scripts {
       'npx',
       ['serve', '-p', staticsServerPort, '-s', 'dist/statics/'],
       {
-        cwd: this.root,
+        cwd: this.testDirectory,
         // stdio: 'inherit',
       },
     );
 
     const appServerProcess = execa('node', ['index.js'], {
-      cwd: this.root,
+      cwd: this.testDirectory,
       // stdio: 'inherit',
       env: {
         PORT: appServerProcessPort,

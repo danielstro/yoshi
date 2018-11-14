@@ -1,7 +1,7 @@
 const { setup: setupPuppeteer } = require('jest-environment-puppeteer');
-const TestSetup = require('../setup');
+const Scripts = require('../scripts');
 
-global.testSetup = new TestSetup(__dirname);
+global.scripts = new Scripts(process.env.TEST_DIRECTORY);
 
 module.exports = async () => {
   process.env = {
@@ -15,6 +15,5 @@ module.exports = async () => {
 
   await setupPuppeteer();
 
-  await global.testSetup.setup();
-  global.result = await global.testSetup.scripts.start();
+  global.result = await global.scripts.start();
 };

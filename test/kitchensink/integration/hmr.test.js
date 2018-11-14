@@ -8,7 +8,7 @@ describe('hmr', () => {
   describe('client side', () => {
     it('browser refresh on javascript change', async () => {
       const filePath = path.join(
-        global.testSetup.testDirectory,
+        global.scripts.testDirectory,
         'src/components/features/css-inclusion.js',
       );
 
