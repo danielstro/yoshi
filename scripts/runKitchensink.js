@@ -99,16 +99,15 @@ projects.forEach(templateDirectory => {
     env: { ...process.env, TEST_DIRECTORY: testDirectory },
   };
 
-  try {
-    execa.shellSync(
-      "npx jest --config='./test/kitchensink/jest.build.config.js' --no-cache --runInBand",
-      options,
-    );
+  const configs = globby.sync(path.join(templateDirectory, 'jest.*.config.js'));
 
-    execa.shellSync(
-      "npx jest --config='./test/kitchensink/jest.start.config.js' --no-cache --runInBand",
-      options,
-    );
+  try {
+    configs.forEach(configPath => {
+      execa.shellSync(
+        `npx jest --config='${configPath}' --no-cache --runInBand`,
+        options,
+      );
+    });
   } finally {
     fs.removeSync(rootDirectory);
   }

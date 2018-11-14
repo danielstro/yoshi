@@ -4,6 +4,6 @@ module.exports = class PlainEnvironment extends PuppeteerEnvironment {
   async setup() {
     await super.setup();
 
-    this.global.testSetup = global.testSetup;
+    this.global.scripts = global.scripts;
   }
 };
