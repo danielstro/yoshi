@@ -331,7 +331,7 @@ describe('webpack', () => {
 
   describe('public folder', () => {
     it('serves static assets', async () => {
-      const response = await request('http://localhost:3200/hello.txt');
+      const response = await request('http://localhost:3200/assets/hello.txt');
       expect(response).toBe('Hello from public folder!');
     });
 
@@ -343,7 +343,7 @@ describe('webpack', () => {
       });
 
       expect(list).toEqual(
-        expect.arrayContaining(['components/', 'app.bundle.js', 'hello.txt']),
+        expect.arrayContaining(['components/', 'app.bundle.js', 'assets/']),
       );
     });
   });
