@@ -5,4 +5,5 @@ module.exports = {
   transformIgnorePatterns: ['/node_modules/', '/test/'],
   globalSetup: require.resolve('./buildGlobalSetup'),
   globalTeardown: require.resolve('./buildGlobalTeardown'),
+  testResultsProcessor: 'jest-teamcity-reporter',
 };

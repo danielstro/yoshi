@@ -6,7 +6,7 @@ const globby = require('globby');
 
 const stdio = /* verbose */ true ? 'inherit' : 'pipe';
 
-const shouldInstallScripts = false; // isCI;
+const shouldInstallScripts = !!process.env.TEAMCITY_VERSION;
 
 const testRegistry = 'http://localhost:4873';
 
