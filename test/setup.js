@@ -24,7 +24,7 @@ module.exports = class TestSetup {
     const shouldInstallScripts = this.isCI;
 
     // Symlink modules locally for faster feedback
-    if (!shouldInstallScripts) {
+    if (true || !shouldInstallScripts) {
       await fs.ensureSymlink(
         path.join(__dirname, '..', 'packages', 'yoshi', 'node_modules'),
         path.join(this.rootDirectory, 'node_modules'),
