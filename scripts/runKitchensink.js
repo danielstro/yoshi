@@ -94,17 +94,24 @@ projects.forEach(templateDirectory => {
     path.join(testDirectory, 'node_modules'),
   );
 
-  execa.shellSync(
-    "npx jest --config='./test/kitchensink/jest.build.config.js' --no-cache --runInBand",
-    { stdio, env: { ...process.env, TEST_DIRECTORY: testDirectory } },
-  );
+  const options = {
+    stdio,
+    env: { ...process.env, TEST_DIRECTORY: testDirectory },
+  };
 
-  execa.shellSync(
-    "npx jest --config='./test/kitchensink/jest.start.config.js' --no-cache --runInBand",
-    { stdio, env: { ...process.env, TEST_DIRECTORY: testDirectory } },
-  );
+  try {
+    execa.shellSync(
+      "npx jest --config='./test/kitchensink/jest.build.config.js' --no-cache --runInBand",
+      options,
+    );
 
-  fs.removeSync(rootDirectory);
+    execa.shellSync(
+      "npx jest --config='./test/kitchensink/jest.start.config.js' --no-cache --runInBand",
+      options,
+    );
+  } finally {
+    fs.removeSync(rootDirectory);
+  }
 });
 
 cleanup();

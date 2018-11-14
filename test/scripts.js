@@ -72,7 +72,7 @@ module.exports = class Scripts {
     this.testDirectory = testDirectory;
   }
 
-  async start({ env = {} } = {}) {
+  async start(env) {
     const port = 3000;
 
     const startProcess = execa('npx', ['yoshi', 'start'], {
@@ -97,10 +97,11 @@ module.exports = class Scripts {
     };
   }
 
-  async build({ env = {} } = {}) {
+  async build(env = {}) {
     return execaSafe('npx', ['yoshi', 'build'], {
       cwd: this.testDirectory,
       env: { CI: 'false', FORCE_COLOR: '0', ...env },
+      // stdio: 'inherit',
     });
   }
 
