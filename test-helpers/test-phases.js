@@ -77,45 +77,7 @@ class Test {
     return promise;
   }
 
-
   spawn(command, options, environment = {}) {
-    const procFdCount = {};
-    const pids = sh.ls('/proc').filter(file => file.match(/\d+/));
-    const pidsFds = pids.map( pid => {
-      try {
-        const fds = fs.readdirSync(`/proc/${pid}/fd`);
-        return {
-          pid,
-          count: fds.length
-        };
-      } catch (ex) {
-        console.log(ex.message);
-        return {
-          pid,
-          count: -1,
-        };
-      }
-    })
-    // sh.ls('/proc/*/fd/*').forEach(file => {
-    //   const parts = file.split('/');
-    //   const pid = parts[2];
-    //   procFdCount[pid] = procFdCount[pid] ? procFdCount[pid]++ : 1;
-    // });
-
-    // const fdArray = Object.keys(procFdCount).map(k => ({
-    //   pid: k,
-    //   count: procFdCount[k],
-    // }));
-    pidsFds.sort((a, b) => b.count - a.count);
-
-    const pidWithMaxCount = pidsFds[0].pid;
-    console.log(pidsFds);
-    console.log(sh.exec(`ps -p ${pidWithMaxCount}`));
-    console.log(sh.exec(`ps f -g ${pidWithMaxCount}`));
-    console.log(sh.exec(`ls -al /proc/${pidWithMaxCount}/fd`));
-    console.log(sh.exec('df -h'));
-    console.log(sh.exec('sysctl fs.inotify'));
-
     if (this.hasTmp()) {
       try {
         options = options || [];

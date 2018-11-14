@@ -593,7 +593,7 @@ describe('Aggregator: Start', () => {
       this.timeout(40000);
 
       describe('when using typescript', () => {
-        it.only(`should rebuild and restart server after a file has been changed with typescript files`, () => {
+        it.skip(`should rebuild and restart server after a file has been changed with typescript files`, () => {
           child = test
             .verbose()
             .setup({
@@ -624,7 +624,7 @@ describe('Aggregator: Start', () => {
       });
 
       describe('when using es6', () => {
-        it(`should rebuild and restart server after a file has been changed`, () => {
+        it.skip(`should rebuild and restart server after a file has been changed`, () => {
           child = test
             .verbose()
             .setup({
@@ -646,7 +646,7 @@ describe('Aggregator: Start', () => {
       });
 
       describe('when using no transpile', () => {
-        it(`should restart server after a file has been changed`, () => {
+        it.skip(`should restart server after a file has been changed`, () => {
           child = test
             .verbose()
             .setup({
