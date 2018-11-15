@@ -300,32 +300,6 @@ describe('Aggregator: Start', () => {
           },
         );
       });
-
-      it('should wrap react root element with react-hot-loader HOC for default entry', () => {
-        child = test
-          .setup({
-            'src/client.js': `import { render } from 'react-dom';
-              render(<App />, rootEl);`,
-            '.babelrc': `{"presets": ["babel-preset-yoshi"]}`,
-            'package.json': fx.packageJson(
-              {
-                hmr: 'auto',
-              },
-              {
-                react: '16.0.0',
-                'react-dom': '16.0.0',
-              },
-            ),
-          })
-          .spawn('start');
-
-        return checkServerIsServing({ port: 3200, file: 'app.bundle.js' }).then(
-          content => {
-            expect(content).to.contain('module.hot.accept()');
-            expect(content).to.contain('react-hot-loader');
-          },
-        );
-      });
     });
 
     describe('hot reload & HMR', () => {
@@ -912,10 +886,8 @@ describe('Aggregator: Start', () => {
   }
 
   function checkStdout(str, { backoff = 100, max = 10 } = {}) {
-    return retryPromise(
-      { backoff, max },
-      () =>
-        test.stdout.indexOf(str) > -1 ? Promise.resolve() : Promise.reject(),
+    return retryPromise({ backoff, max }, () =>
+      test.stdout.indexOf(str) > -1 ? Promise.resolve() : Promise.reject(),
     );
   }
 
@@ -948,8 +920,8 @@ describe('Aggregator: Start', () => {
     return retryPromise({ backoff: 1000 }, () =>
       fetch(`http://localhost:${fx.defaultServerPort()}/`)
         .then(res => res.text())
-        .then(
-          body => (body === expected ? Promise.resolve() : Promise.reject()),
+        .then(body =>
+          body === expected ? Promise.resolve() : Promise.reject(),
         ),
     );
   }
