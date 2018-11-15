@@ -85,6 +85,10 @@ projects.forEach(templateDirectory => {
     execa.shellSync('npm install', {
       cwd: testDirectory,
       stdio: 'inherit',
+      extendEnv: false,
+      env: {
+        PATH: process.env.PATH,
+      },
     });
   }
 
