@@ -2,7 +2,7 @@ const os = require('os');
 const execa = require('execa');
 const stripAnsi = require('strip-ansi');
 const waitPort = require('wait-port');
-const psTree = require('ps-tree');
+const terminate = require('terminate');
 
 async function waitForPort(port, { timeout = 10000 } = {}) {
   const portFound = await waitPort({ port, timeout, output: 'silent' });
@@ -10,23 +10,6 @@ async function waitForPort(port, { timeout = 10000 } = {}) {
   if (!portFound) {
     throw new Error(`Timed out waiting for "${port}".`);
   }
-}
-
-function killProcessAndChildren(child) {
-  return new Promise(resolve => {
-    const { pid } = child;
-
-    psTree(pid, (err, children) => {
-      [pid].concat(children.map(p => p.PID)).forEach(tpid => {
-        try {
-          process.kill(tpid, 'SIGKILL');
-        } catch (e) {}
-      });
-
-      child = null;
-      resolve();
-    });
-  });
 }
 
 function stripYarn(output) {
@@ -92,7 +75,7 @@ module.exports = class Scripts {
     return {
       port,
       done() {
-        return killProcessAndChildren(startProcess);
+        return terminate(startProcess.pid);
       },
     };
   }
@@ -133,8 +116,8 @@ module.exports = class Scripts {
       staticsServerPort,
       appServerProcessPort,
       done() {
-        killProcessAndChildren(staticsServerProcess);
-        killProcessAndChildren(appServerProcess);
+        terminate(staticsServerProcess.pid);
+        terminate(appServerProcess.pid);
       },
     };
   }
