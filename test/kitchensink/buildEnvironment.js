@@ -1,4 +1,5 @@
 const PuppeteerEnvironment = require('jest-environment-puppeteer');
+const { parastorageCdnUrl, localCdnUrl } = require('../constants');
 
 module.exports = class BuildEnvironment extends PuppeteerEnvironment {
   async setup() {
@@ -11,16 +12,9 @@ module.exports = class BuildEnvironment extends PuppeteerEnvironment {
     this.global.page.on('request', request => {
       const url = request.url();
 
-      if (
-        url.startsWith(
-          'https://static.parastorage.com/services/kitchensink/1.0.0',
-        )
-      ) {
+      if (url.startsWith(parastorageCdnUrl)) {
         request.continue({
-          url: url.replace(
-            'https://static.parastorage.com/services/kitchensink/1.0.0',
-            'http://localhost:3200',
-          ),
+          url: url.replace(parastorageCdnUrl, localCdnUrl),
         });
       } else {
         request.continue();

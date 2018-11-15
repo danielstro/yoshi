@@ -1,4 +1,5 @@
 const http = require('http');
+const { parastorageCdnUrl, localCdnUrl } = require('./constants');
 
 const makeRequest = url => {
   return new Promise(resolve => {
@@ -11,15 +12,8 @@ const makeRequest = url => {
 };
 
 const request = url => {
-  if (
-    url.startsWith('https://static.parastorage.com/services/kitchensink/1.0.0')
-  ) {
-    return makeRequest(
-      url.replace(
-        'https://static.parastorage.com/services/kitchensink/1.0.0',
-        'http://localhost:3200',
-      ),
-    );
+  if (url.startsWith(parastorageCdnUrl)) {
+    return makeRequest(url.replace(parastorageCdnUrl, localCdnUrl));
   }
 
   return makeRequest(url);
