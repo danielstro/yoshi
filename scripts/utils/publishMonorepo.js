@@ -2,32 +2,20 @@ const path = require('path');
 const execa = require('execa');
 const { testRegistry } = require('./constants');
 
-const stdio = /* verbose */ true ? 'inherit' : 'pipe';
-
 function publishMonorepo() {
   // Start in root directory even if run from another directory
   process.chdir(path.join(__dirname, '../..'));
 
-  const verdaccio = execa.shell('npx verdaccio --config verdaccio.yaml', {
-    stdio,
-  });
+  const verdaccio = execa.shell('npx verdaccio --config verdaccio.yaml');
 
-  execa.shellSync('npx wait-port 4873 -o silent', {
-    stdio,
-  });
+  execa.shellSync('npx wait-port 4873 -o silent');
 
   execa.shellSync(
     `npx lerna exec 'npx npm-auth-to-token -u user -p password -e user@example.com -r "${testRegistry}"'`,
-    {
-      stdio,
-    },
   );
 
   execa.shellSync(
     `npx lerna exec 'node ../../packages/create-yoshi-app/scripts/verifyPublishConfig.js'`,
-    {
-      stdio,
-    },
   );
 
   execa.shellSync(

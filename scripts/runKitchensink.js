@@ -8,8 +8,6 @@ const {
   authenticateToRegistry,
 } = require('./utils/publishMonorepo');
 
-const stdio = /* verbose */ true ? 'inherit' : 'pipe';
-
 const shouldInstallScripts = !!process.env.TEAMCITY_VERSION;
 
 const cleanup = shouldInstallScripts ? publishMonorepo() : () => {};
@@ -59,7 +57,7 @@ projects.forEach(templateDirectory => {
   );
 
   const options = {
-    stdio,
+    stdio: 'inherit',
     env: { ...process.env, TEST_DIRECTORY: testDirectory },
   };
 

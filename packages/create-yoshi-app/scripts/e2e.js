@@ -9,7 +9,6 @@ const {
   publishMonorepo,
   authenticateToRegistry,
 } = require('../../../scripts/utils/publishMonorepo');
-const { testRegistry } = require('../src/constants');
 
 // verbose logs and output
 const verbose = process.env.VERBOSE_TESTS;
