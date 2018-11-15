@@ -29,13 +29,13 @@ projects.forEach(templateDirectory => {
   // Symlink modules locally for faster feedback
   if (!shouldInstallScripts) {
     fs.ensureSymlinkSync(
-      path.join(__dirname, '..', 'packages', 'yoshi', 'node_modules'),
+      path.join(__dirname, '../packages/yoshi/node_modules'),
       path.join(rootDirectory, 'node_modules'),
     );
 
     fs.ensureSymlinkSync(
-      path.join(__dirname, '..', 'packages', 'yoshi', 'bin', 'yoshi.js'),
-      path.join(rootDirectory, 'node_modules', '.bin', 'yoshi'),
+      path.join(__dirname, '../packages/yoshi/bin/yoshi.js'),
+      path.join(rootDirectory, 'node_modules/.bin/yoshi'),
     );
   } else {
     // Publish the entire monorepo and install everything from CI to get
