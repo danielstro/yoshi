@@ -103,8 +103,10 @@ module.exports = class Scripts {
       staticsServerPort,
       appServerProcessPort,
       done() {
-        terminate(staticsServerProcess.pid);
-        terminate(appServerProcess.pid);
+        return Promise.all([
+          terminate(staticsServerProcess.pid),
+          terminate(appServerProcess.pid),
+        ]);
       },
     };
   }
