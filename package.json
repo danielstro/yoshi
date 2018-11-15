@@ -78,7 +78,6 @@
     "tempy": "^0.2.1",
     "terminate": "^2.1.0",
     "verdaccio": "^3.8.3",
-    "wait-for-localhost": "^2.0.1",
     "wait-port": "^0.2.2"
   },
   "publishConfig": {
