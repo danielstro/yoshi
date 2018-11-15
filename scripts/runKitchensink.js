@@ -34,12 +34,12 @@ try {
     if (!isCI) {
       fs.ensureSymlinkSync(
         path.join(__dirname, '../packages/yoshi/node_modules'),
-        path.join(testDirectory, 'node_modules'),
+        path.join(rootDirectory, 'node_modules'),
       );
 
       fs.ensureSymlinkSync(
         path.join(__dirname, '../packages/yoshi/bin/yoshi.js'),
-        path.join(testDirectory, 'node_modules/.bin/yoshi'),
+        path.join(rootDirectory, 'node_modules/.bin/yoshi'),
       );
     } else {
       // Authenticate and install from our fake registry on CI
@@ -58,7 +58,7 @@ try {
     // Copy mocked `node_modules`
     fs.copySync(
       path.join(templateDirectory, '__node_modules__'),
-      path.join(rootDirectory, 'node_modules'),
+      path.join(testDirectory, 'node_modules'),
     );
 
     const options = {
