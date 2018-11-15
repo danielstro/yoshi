@@ -3,51 +3,14 @@ const fs = require('fs-extra');
 const tempy = require('tempy');
 const execa = require('execa');
 const globby = require('globby');
+const {
+  publishMonorepo,
+  authenticateToRegistry,
+} = require('./utils/publishMonorepo');
 
 const stdio = /* verbose */ true ? 'inherit' : 'pipe';
 
 const shouldInstallScripts = !!process.env.TEAMCITY_VERSION;
-
-const testRegistry = 'http://localhost:4873';
-
-const publishMonorepo = () => {
-  // Start in root directory even if run from another directory
-  process.chdir(path.join(__dirname, '..'));
-
-  const verdaccio = execa.shell('npx verdaccio --config verdaccio.yaml', {
-    stdio,
-  });
-
-  execa.shellSync('npx wait-port 4873 -o silent', {
-    stdio,
-  });
-
-  execa.shellSync(
-    `npx lerna exec 'npx npm-auth-to-token -u user -p password -e user@example.com -r "${testRegistry}"'`,
-    {
-      stdio,
-    },
-  );
-
-  execa.shellSync(
-    `npx lerna exec 'node ../../packages/create-yoshi-app/scripts/verifyPublishConfig.js'`,
-    {
-      stdio,
-    },
-  );
-
-  execa.shellSync(
-    `npx lerna publish --yes --force-publish=* --skip-git --cd-version=minor --exact --npm-tag=latest --registry="${testRegistry}"`,
-    {
-      stdio: 'inherit',
-    },
-  );
-
-  // Return a cleanup function
-  return () => {
-    execa.shellSync(`kill -9 ${verdaccio.pid}`);
-  };
-};
 
 const cleanup = shouldInstallScripts ? publishMonorepo() : () => {};
 
@@ -77,10 +40,7 @@ projects.forEach(templateDirectory => {
   } else {
     // Publish the entire monorepo and install everything from CI to get
     // the maximum reliability
-    execa.shellSync(
-      `npx npm-auth-to-token -u user -p password -e user@example.com -r "http://localhost:4873"`,
-      { cwd: testDirectory },
-    );
+    authenticateToRegistry(testDirectory);
 
     execa.shellSync('npm install', {
       cwd: testDirectory,
