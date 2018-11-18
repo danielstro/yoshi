@@ -10,7 +10,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('css-inclusion', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
 
@@ -18,7 +18,7 @@ describe('webpack', () => {
       await initTest('global-css-inclusion');
 
       await matchCSS('global-css-inclusion', page, [
-        /\.global-css-modules-inclusion\{background:.+;color:.+}/,
+        /\.global-css-modules-inclusion\{background:#ccc;color:#000;*}/,
       ]);
     });
 
@@ -30,7 +30,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('css-camelcase-inclusion', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
 
@@ -60,7 +60,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('scss-inclusion', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
 
@@ -68,7 +68,7 @@ describe('webpack', () => {
       await initTest('global-scss-inclusion');
 
       await matchCSS('global-scss-inclusion', page, [
-        /\.global-scss-modules-inclusion\{background:.+;color:.+}/,
+        /\.global-scss-modules-inclusion\{background:#ccc;color:#000;*}/,
       ]);
     });
 
@@ -80,7 +80,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('scss-camelcase-inclusion', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
 
@@ -100,7 +100,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('scss-import-external', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
 
@@ -112,7 +112,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('scss-import-compass', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
   });
@@ -126,7 +126,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('sass-inclusion', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
 
@@ -134,7 +134,7 @@ describe('webpack', () => {
       await initTest('global-sass-inclusion');
 
       await matchCSS('global-sass-inclusion', page, [
-        /\.global-sass-modules-inclusion\{background:.+;color:.+}/,
+        /\.global-sass-modules-inclusion\{background:#ccc;color:#000;*}/,
       ]);
     });
 
@@ -146,7 +146,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('sass-camelcase-inclusion', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
 
@@ -168,7 +168,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('less-inclusion', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
 
@@ -176,7 +176,7 @@ describe('webpack', () => {
       await initTest('global-less-inclusion');
 
       await matchCSS('global-less-inclusion', page, [
-        /\.global-less-modules-inclusion\{background:.+;color:.+}/,
+        /\.global-less-modules-inclusion\{background:#ccc;color:#000;*}/,
       ]);
     });
 
@@ -188,7 +188,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('less-camelcase-inclusion', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
 
@@ -208,7 +208,7 @@ describe('webpack', () => {
       );
 
       await matchCSS('less-import-external', page, [
-        new RegExp(`.${className}{background:.+;color:.+}`),
+        new RegExp(`.${className}{background:#ccc;color:#000;*}`),
       ]);
     });
   });
